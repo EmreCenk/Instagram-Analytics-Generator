@@ -99,12 +99,7 @@ class InstagramDataAnalyzer():
             else: counts[date] += 1
         return counts
 
-class InstagramDataVisualizer:
 
-    @staticmethod
-    def visualize_logins(path: str):
-        counted = InstagramDataAnalyzer.count_year_and_months_for_login_activity(path)
-        
 if __name__ == '__main__':
     from dotenv import load_dotenv
     load_dotenv()
@@ -112,8 +107,5 @@ if __name__ == '__main__':
 
     path_to_data = os.environ["path_to_instagram_export_download"]
     companies = InstagramDataAnalyzer.get_marketing_list(path_to_data)
-    # a = InstagramDataAnalyzer.get_login(path_to_data)
     w = InstagramDataAnalyzer.count_year_and_months_for_login_activity(path_to_data)
     print(w)
-    # for k in w:
-    #     print(k,"\t", w[k])
