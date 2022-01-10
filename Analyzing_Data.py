@@ -99,6 +99,12 @@ class InstagramDataAnalyzer():
             else: counts[date] += 1
         return counts
 
+class InstagramDataVisualizer:
+
+    @staticmethod
+    def visualize_logins(path: str):
+        counted = InstagramDataAnalyzer.count_year_and_months_for_login_activity(path)
+        
 if __name__ == '__main__':
     from dotenv import load_dotenv
     load_dotenv()
