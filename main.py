@@ -16,6 +16,20 @@ def different_cwd(path: str):
         os.chdir(oldpwd)
 
 class InstagramDataAnalyzer():
+
+    @staticmethod
+    def get_json_for_certain_path(root_path: str, second_layer: str, third_layer: str):
+        """
+        :param root_path: path to root of the downloaded export
+        :param second_layer: the second directory from root
+        :param third_layer: Name of file to open
+        :return:
+        """
+        path_to_ads = os.path.join(root_path, second_layer, third_layer)
+        with open(path_to_ads) as ad_file:
+            data = json.load(ad_file)
+        return data
+
     @staticmethod
     def get_marketing_list(path: str) -> List[Dict]:
         """
@@ -30,13 +44,11 @@ class InstagramDataAnalyzer():
         }
         """
         # Finding path to ads from root:
-        path_to_ads = os.path.join(path, "ads_and_businesses")
-        path_to_ads = os.path.join(path_to_ads, os.listdir(path_to_ads)[0])
+        return InstagramDataAnalyzer.get_json_for_certain_path(path,
+                                                               "ads_and_businesses",
+                                                               "advertisers_using_your_activity_or_information")["ig_custom_audiences_all_types"]
 
-        with open(path_to_ads) as ad_file:
-            data = json.load(ad_file)["ig_custom_audiences_all_types"]
-        print(data)
-        return data
+
 if __name__ == '__main__':
     from dotenv import load_dotenv
     load_dotenv()
