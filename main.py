@@ -81,11 +81,20 @@ class InstagramDataAnalyzer():
                                                                "login_activity.json")["account_history_login_history"]
     @staticmethod
     def count_year_and_months_for_login_activity(path: str):
+        """
+        :param path: root to export download
+        :return: a dictionary that maps year-month of the activity to how many logins that year/month.
+        Dictionary format:
+        {'2022-1': 420,
+         '2021-11': 69,
+          '2021-10': 96 ...}
+        """
         dates = InstagramDataAnalyzer.get_login(path)
         counts = {}
         for login_activity in dates:
             date_of_login = login_activity["title"]
-            date = parser.parse(date_of_login).date().__str__()
+            date = parser.parse(date_of_login)
+            date = str(date.year) + "-" + str(date.month)
             if date not in counts: counts[date] = 1
             else: counts[date] += 1
         return counts
@@ -99,5 +108,6 @@ if __name__ == '__main__':
     companies = InstagramDataAnalyzer.get_marketing_list(path_to_data)
     # a = InstagramDataAnalyzer.get_login(path_to_data)
     w = InstagramDataAnalyzer.count_year_and_months_for_login_activity(path_to_data)
-    for k in w:
-        print(k,"\t", w[k])
+    print(w)
+    # for k in w:
+    #     print(k,"\t", w[k])
