@@ -94,7 +94,7 @@ class InstagramDataAnalyzer():
         for login_activity in dates:
             date_of_login = login_activity["title"]
             date = parser.parse(date_of_login)
-            date = str(date.year) + "-" + str(date.month)
+            date = date.replace(minute=1, hour=1, second=1, day=1)
             if date not in counts: counts[date] = 1
             else: counts[date] += 1
         return counts

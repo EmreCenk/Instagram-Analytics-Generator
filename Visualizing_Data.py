@@ -1,6 +1,6 @@
 from Analyzing_Data import InstagramDataAnalyzer
 import matplotlib.pyplot as plt
-
+import numpy as np
 class InstagramDataVisualizer:
 
     @staticmethod
@@ -10,9 +10,10 @@ class InstagramDataVisualizer:
         for c in counted:
             xs.append(c)
             ys.append(counted[c])
+
         xs.reverse()
         ys.reverse()
-        plt.plot(xs, ys, label='sin(%.3fx)' % (1 / 3.805))
+        plt.plot(xs, ys, label="login number", )
         plt.legend()
         plt.grid()
         plt.show()
