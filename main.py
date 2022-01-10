@@ -2,6 +2,7 @@ import os
 from contextlib import contextmanager
 from typing import List, Dict
 import json
+from dateutil import parser
 
 @contextmanager
 def different_cwd(path: str):
@@ -78,6 +79,22 @@ class InstagramDataAnalyzer():
         return InstagramDataAnalyzer.get_json_for_certain_path(path,
                                                                "login_and_account_creation",
                                                                "login_activity.json")["account_history_login_history"]
+    @staticmethod
+    def count_year_and_months_for_login_activity(path: str):
+        dates = InstagramDataAnalyzer.get_login(path)
+        counts = {}
+        for login_activity in dates:
+            date_of_login = login_activity["title"]
+            date = parser.parse(date_of_login).date().__str__()
+            if date not in counts: counts[date] = 1
+            else: counts[date] += 1
+        return counts
+class InstagramVisualizer:
+
+    @staticmethod
+    def visualize_login(path: str):
+        dates = InstagramDataAnalyzer.get_login(path)
+
 if __name__ == '__main__':
     from dotenv import load_dotenv
     load_dotenv()
@@ -85,8 +102,7 @@ if __name__ == '__main__':
 
     path_to_data = os.environ["path_to_instagram_export_download"]
     companies = InstagramDataAnalyzer.get_marketing_list(path_to_data)
-    a = InstagramDataAnalyzer.get_login(path_to_data)
-    from pprint import pprint
-    for k in a:
-        pprint(k)
-        break
+    # a = InstagramDataAnalyzer.get_login(path_to_data)
+    w = InstagramDataAnalyzer.count_year_and_months_for_login_activity(path_to_data)
+    for k in w:
+        print(k,"\t", w[k])
