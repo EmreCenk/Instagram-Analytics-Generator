@@ -22,10 +22,12 @@ class InstagramDataAnalyzer():
         :param path: Path to root folder of downloaded export
         :return: list of company dictionaries.
         The entries are in the following format:
-        {'advertiser_name': 'name',
-         'has_data_file_custom_audience': True,
-          'has_remarketing_custom_audience': True,
-           'has_in_person_store_visit': False}
+        {
+        'advertiser_name': 'name',
+        'has_data_file_custom_audience': True,
+        'has_remarketing_custom_audience': True,
+        'has_in_person_store_visit': False
+        }
         """
         # Finding path to ads from root:
         path_to_ads = os.path.join(path, "ads_and_businesses")
@@ -41,4 +43,5 @@ if __name__ == '__main__':
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    InstagramDataAnalyzer.get_marketing_list(path_to_data)
+    companies = InstagramDataAnalyzer.get_marketing_list(path_to_data)
+    print(len(companies))
