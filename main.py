@@ -46,9 +46,38 @@ class InstagramDataAnalyzer():
         # Finding path to ads from root:
         return InstagramDataAnalyzer.get_json_for_certain_path(path,
                                                                "ads_and_businesses",
-                                                               "advertisers_using_your_activity_or_information")["ig_custom_audiences_all_types"]
+                                                               "advertisers_using_your_activity_or_information.json")["ig_custom_audiences_all_types"]
 
-
+    @staticmethod
+    def get_login(path: str) -> List[Dict]:
+        """
+        :param path: root path to downloaded exports
+        :return: list of dictionary that includes an entry for every login
+        The entries are in the following format:
+        {'title': '2022-01-10T05:47:01+00:00',
+         'media_map_data': {},
+         'string_map_data': {'Cookie Name': {'href': '',
+                                             'timestamp': 0,
+                                             'value': '*************************JlO'},
+                             'IP Address': {'href': '',
+                                            'timestamp': 0,
+                                            'value': '72.53.192.5'},
+                             'Language Code': {'href': '',
+                                               'timestamp': 0,
+                                               'value': 'en'},
+                             'Time': {'href': '', 'timestamp': 1641793621, 'value': ''},
+                             'User Agent': {'href': '',
+                                            'timestamp': 0,
+                                            'value': 'Mozilla/5.0 (Windows NT 10.0; '
+                                                     'Win64; x64) AppleWebKit/537.36 '
+                                                     '(KHTML, like Gecko) '
+                                                     'Chrome/96.0.4664.110 '
+                                                     'Safari/537.36'}}
+        }
+        """
+        return InstagramDataAnalyzer.get_json_for_certain_path(path,
+                                                               "login_and_account_creation",
+                                                               "login_activity.json")["account_history_login_history"]
 if __name__ == '__main__':
     from dotenv import load_dotenv
     load_dotenv()
@@ -56,4 +85,8 @@ if __name__ == '__main__':
 
     path_to_data = os.environ["path_to_instagram_export_download"]
     companies = InstagramDataAnalyzer.get_marketing_list(path_to_data)
-    print(len(companies))
+    a = InstagramDataAnalyzer.get_login(path_to_data)
+    from pprint import pprint
+    for k in a:
+        pprint(k)
+        break
