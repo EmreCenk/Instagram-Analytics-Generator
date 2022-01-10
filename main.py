@@ -89,11 +89,6 @@ class InstagramDataAnalyzer():
             if date not in counts: counts[date] = 1
             else: counts[date] += 1
         return counts
-class InstagramVisualizer:
-
-    @staticmethod
-    def visualize_login(path: str):
-        dates = InstagramDataAnalyzer.get_login(path)
 
 if __name__ == '__main__':
     from dotenv import load_dotenv
