@@ -46,12 +46,18 @@ class InstagramDataVisualizer:
         NOTE: Hourly intervals for chats that span a long period of time is not recommended.
         :return: None
         """
+
+        if interval < 0 or interval > 3:
+            raise ValueError(f"'interval' argument must be one of 0, 1, 2, 3."
+                             f"\nThe interval meanings are as follows:"
+                             "\n0 -> yearly intervals\n1 -> monthly intervals\n2 -> daily intervals\n3 -> hourly interval"
+                             f"\n\n{interval} is not a valid interval")
         times = ["%Y", "%m", "%d", "%H"]
         time_string = ""
         for i in range(interval + 1): time_string += times[i] + "-"
         time_string = time_string[:-1]
         if time_string == 4: time_string += ":%M"
-        print(time_string)
+
         colors = ['red', 'blue', 'darkkhaki', 'green', 'orange', 'purple', 'brown', 'pink', 'teal', 'maroon', 'cyan', 'magenta', 'navy', 'lime', 'olive', 'lavender', 'mauve', 'umber', 'murk', 'black', 'gray']
         to_plot = InstagramDataAnalyzer.get_message_length_over_time(path, chat_name)
         for user_index, username in enumerate(to_plot):
@@ -123,4 +129,4 @@ if __name__ == '__main__':
     path_to_data = os.environ["path_to_instagram_export_download"]
     # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
-    InstagramDataVisualizer.vizualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
+    InstagramDataVisualizer.vizualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka", interval = 4)
