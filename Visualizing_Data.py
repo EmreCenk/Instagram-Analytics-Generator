@@ -6,7 +6,12 @@ from dateutil import parser
 class InstagramDataVisualizer:
 
     @staticmethod
-    def visualize_logins(path: str):
+    def visualize_logins(path: str) -> None:
+        """
+        Visualizes number of logins over time
+        :param path: path to root for user
+        :return: None
+        """
         counted = InstagramDataAnalyzer.count_year_and_months_for_login_activity(path)
         xs, ys = [], []
         for c in counted:
@@ -24,7 +29,13 @@ class InstagramDataVisualizer:
         plt.show()
 
     @staticmethod
-    def vizualize_message_length_over_time(path: str, chat_name: str):
+    def vizualize_message_length_over_time(path: str, chat_name: str) -> None:
+        """
+        Visualizes message length over time for any given chat. Each user is plotted separately.
+        :param path: path to root of download
+        :param chat_name: name of group chat (according to the download)
+        :return: None
+        """
         to_plot = InstagramDataAnalyzer.get_message_length_over_time(path, chat_name)
         for username in to_plot:
 
@@ -43,14 +54,14 @@ class InstagramDataVisualizer:
         plt.show()
 
     @staticmethod
-    def vizualize_message_count_over_time(path: str, chat_name: str):
-        from collections import defaultdict
-        #todo: move import to top
-
-
+    def vizualize_message_count_over_time(path: str, chat_name: str) -> None:
+        """
+        Vizualizes message count over time for a given chat.
+        :param path: path to root
+        :param chat_name: name of chat
+        :return: None
+        """
         to_plot = InstagramDataAnalyzer.get_message_length_over_time(path, chat_name)
-
-
         for username in to_plot:
             days = {}
             timestamps, messages = to_plot[username][1], to_plot[username][0]
