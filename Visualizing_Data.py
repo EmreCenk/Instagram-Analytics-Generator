@@ -46,7 +46,7 @@ class InstagramDataVisualizer:
 
             plt.plot(dates, lengths, label=username)
 
-        plt.title(f"Message length over time in groupchat '{chat_name}'")
+        plt.title(f"Message length over time with '{chat_name}'")
         plt.xlabel("date (year-month)")
         plt.ylabel("length of message")
         plt.legend()
@@ -78,7 +78,7 @@ class InstagramDataVisualizer:
 
             plt.plot(x_axis, y_axis, label=username)
 
-        plt.title(f"Number of messages over time in {chat_name}")
+        plt.title(f"Number of messages over time with {chat_name}")
         plt.xlabel("date (year-month)")
         plt.ylabel("number of messages")
         plt.legend()
@@ -91,6 +91,6 @@ if __name__ == '__main__':
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    # print(InstagramDataAnalyzer.list_chats(path_to_data))
+    print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
-    InstagramDataVisualizer.vizualize_message_count_over_time(path_to_data, "thesimpsons_457uupaoka")
+    InstagramDataVisualizer.vizualize_message_count_over_time(path_to_data, "")
