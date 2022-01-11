@@ -37,15 +37,24 @@ class InstagramDataVisualizer:
         :param chat_name: name of group chat (according to the download)
         :return: None
         """
+        colors = ['red', 'blue', 'darkkhaki', 'green', 'orange', 'purple', 'brown', 'pink', 'teal', 'maroon', 'cyan', 'magenta', 'navy', 'lime', 'olive', 'lavender', 'mauve', 'umber', 'murk', 'black', 'gray', 'white']
         to_plot = InstagramDataAnalyzer.get_message_length_over_time(path, chat_name)
-        for username in to_plot:
+        for user_index, username in enumerate(to_plot):
+            days = {}
+            timestamps, messages = to_plot[username][1], to_plot[username][0]
+            for i in range(len(timestamps)):
+                timestamps[i] = datetime.fromtimestamp(int(timestamps[i])/1000)
+                cache = parser.parse(timestamps[i].strftime('%Y-%m-%d'))
 
+                if cache in days: days[cache] += messages[i]
+                else: days[cache] = messages[i]
+            x_axis, y_axis = [], []
 
-            dates, lengths = to_plot[username][1], to_plot[username][0]
-            for i in range(len(dates)):
-                dates[i] = datetime.fromtimestamp(int(dates[i])/1000)
+            for date in days:
+                x_axis.append(date)
+                y_axis.append(days[date])
 
-            plt.plot(dates, lengths, label=username)
+            plt.plot(x_axis, y_axis, label=username, color = colors[user_index%len(colors)])
 
         plt.title(f"Message length over time with '{chat_name}'")
         plt.xlabel("date (year-month)")
@@ -99,4 +108,4 @@ if __name__ == '__main__':
     path_to_data = os.environ["path_to_instagram_export_download"]
     print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
-    InstagramDataVisualizer.vizualize_message_count_over_time(path_to_data, "thesimpsons_457uupaoka")
+    InstagramDataVisualizer.vizualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
