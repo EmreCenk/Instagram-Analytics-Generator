@@ -64,11 +64,34 @@ class InstagramDataAnalyzer():
                 senders[sender][0].append(len(value))
                 senders[sender][1].append(timestamp)
         return senders
+
+    @staticmethod
+    def get_word_distribution(path: str, chat_name: str) -> Dict[str, int]:
+        """
+        :param path: root to download export
+        :param chat_name: name of chat history to count
+        :return:
+        A dictionary that maps words to how many times they were used in the chat.
+        {"Word1": value, "word2": 123 ...}
+        """
+        counting = {}
+        messages = InstagramDataRetreiver.get_messages(path, chat_name)
+        for i in range(len(messages) - 1, -1, -1):
+            if "content" not in messages[i]: continue #it's a message that contains an image
+            value = messages[i]["content"].lower().replace(",", "")
+            for word in value.split(" "):
+                if word not in counting: counting[word] = 1
+                else: counting[word] += 1
+        return counting
+
 if __name__ == '__main__':
     from dotenv import load_dotenv
     load_dotenv()
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    alpha = InstagramDataRetreiver.get_messages(path_to_data, "test")
-    print(alpha[0])
+    print(
+        InstagramDataAnalyzer.get_word_distribution(path_to_data, "thesimpsons_457uupaoka")
+    )
+    # alpha = InstagramDataRetreiver.get_messages(path_to_data, "test")
+    # print(alpha[0])
