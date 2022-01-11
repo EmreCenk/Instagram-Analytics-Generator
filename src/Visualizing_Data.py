@@ -1,8 +1,8 @@
-from Analyzing_Data import InstagramDataAnalyzer
+from src.Analyzing_Data import InstagramDataAnalyzer
 import matplotlib.pyplot as plt
 from datetime import datetime
 from dateutil import parser
-import numpy as np
+
 
 class InstagramDataVisualizer:
 
@@ -130,4 +130,4 @@ if __name__ == '__main__':
     path_to_data = os.environ["path_to_instagram_export_download"]
     # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
-    InstagramDataVisualizer.vizualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka", interval = 5)
+    InstagramDataVisualizer.vizualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka", interval = 3)
