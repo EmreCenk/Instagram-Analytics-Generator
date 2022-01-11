@@ -30,21 +30,36 @@ class InstagramDataVisualizer:
         plt.show()
 
     @staticmethod
-    def vizualize_message_length_over_time(path: str, chat_name: str) -> None:
+    def vizualize_message_length_over_time(path: str,
+                                           chat_name: str,
+                                           interval: int = 3) -> None:
         """
         Visualizes message length over time for any given chat. Each user is plotted separately.
         :param path: path to root of download
         :param chat_name: name of group chat (according to the download)
+        :param interval: an integer between 0 and 3 inclusive that specifies what interval the messages will be plotted in.
+        The following is the meaning for interval values:
+        0 -> yearly intervals
+        1 -> monthly intervals
+        2 -> daily intervals
+        3 -> hourly interval
+        NOTE: Hourly intervals for chats that span a long period of time is not recommended.
         :return: None
         """
-        colors = ['red', 'blue', 'darkkhaki', 'green', 'orange', 'purple', 'brown', 'pink', 'teal', 'maroon', 'cyan', 'magenta', 'navy', 'lime', 'olive', 'lavender', 'mauve', 'umber', 'murk', 'black', 'gray', 'white']
+        times = ["%Y", "%m", "%d", "%H"]
+        time_string = ""
+        for i in range(interval + 1): time_string += times[i] + "-"
+        time_string = time_string[:-1]
+        if time_string == 4: time_string += ":%M"
+        print(time_string)
+        colors = ['red', 'blue', 'darkkhaki', 'green', 'orange', 'purple', 'brown', 'pink', 'teal', 'maroon', 'cyan', 'magenta', 'navy', 'lime', 'olive', 'lavender', 'mauve', 'umber', 'murk', 'black', 'gray']
         to_plot = InstagramDataAnalyzer.get_message_length_over_time(path, chat_name)
         for user_index, username in enumerate(to_plot):
             days = {}
             timestamps, messages = to_plot[username][1], to_plot[username][0]
             for i in range(len(timestamps)):
                 timestamps[i] = datetime.fromtimestamp(int(timestamps[i])/1000)
-                cache = parser.parse(timestamps[i].strftime('%Y-%m-%d'))
+                cache = parser.parse(timestamps[i].strftime(time_string))
 
                 if cache in days: days[cache] += messages[i]
                 else: days[cache] = messages[i]
@@ -71,7 +86,7 @@ class InstagramDataVisualizer:
         :param chat_name: name of chat
         :return: None
         """
-        colors = ['red', 'blue', 'darkkhaki', 'green', 'orange', 'purple', 'brown', 'pink', 'teal', 'maroon', 'cyan', 'magenta', 'navy', 'lime', 'olive', 'lavender', 'mauve', 'umber', 'murk', 'black', 'gray', 'white']
+        colors = ['red', 'blue', 'darkkhaki', 'green', 'orange', 'purple', 'brown', 'pink', 'teal', 'maroon', 'cyan', 'magenta', 'navy', 'lime', 'olive', 'lavender', 'mauve', 'umber', 'murk', 'black', 'gray']
 
 
 
@@ -106,6 +121,6 @@ if __name__ == '__main__':
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    print(InstagramDataAnalyzer.list_chats(path_to_data))
+    # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
     InstagramDataVisualizer.vizualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
