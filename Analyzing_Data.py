@@ -130,7 +130,32 @@ class InstagramDataAnalyzer():
             else: counts[date] += 1
         return counts
 
+    @staticmethod
+    def get_message_length_over_time(path: str, chat_name: str) -> Dict[str, List[List[int], List[int]]]:
+        """
+        :param path: root to download export
+        :param chat_name: name of chat history to count
+        :return:
+        A dictionary that maps usernames to lists that contain the lengths of their messages and the timestamps of said messages
+        {"Name1": [ [message1, message2 ... messageN], [timestamp1, timestamp2 ... timestampN] ],
+         "Name2": ...}
+        """
+        messages = InstagramDataAnalyzer.get_messages(path, chat_name)
 
+        senders = {} # senders = {"Name": [ [message1, message2 ... messageN], [timestamp1, timestamp2 ... timestampN] ] }
+
+        #we loop in reverse because the messages are ordered from most recent to oldest
+        for i in range(len(messages) - 1, -1, -1):
+            if "content" not in messages[i]: continue #it's a message that contains an image
+            sender = messages[i]["sender_name"]
+            timestamp = messages[i]["timestamp_ms"]
+            value = messages[i]["content"]
+
+            if sender not in senders: senders[sender] = [[value], [timestamp]]
+            else:
+                senders[sender][0].append(len(value))
+                senders[sender][1].append(timestamp)
+        return senders
 if __name__ == '__main__':
     from dotenv import load_dotenv
     load_dotenv()

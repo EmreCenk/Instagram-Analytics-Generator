@@ -1,6 +1,7 @@
 from Analyzing_Data import InstagramDataAnalyzer
 import matplotlib.pyplot as plt
-import numpy as np
+from datetime import datetime
+
 class InstagramDataVisualizer:
 
     @staticmethod
@@ -19,6 +20,10 @@ class InstagramDataVisualizer:
         plt.legend()
         plt.grid()
         plt.show()
+
+    @staticmethod
+    def vizualize_message_length_over_time(path: str, chat_name: str):
+
 
 if __name__ == '__main__':
     import os
