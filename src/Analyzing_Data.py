@@ -15,8 +15,7 @@ def different_cwd(path: str):
         yield
     finally:
         os.chdir(oldpwd)
-
-class InstagramDataAnalyzer():
+class InstagramDataRetreiver():
 
     @staticmethod
     def get_json_for_certain_path(root_path: str, layers: List[str], file_name: str):
@@ -45,7 +44,7 @@ class InstagramDataAnalyzer():
         }
         """
         # Finding path to ads from root:
-        return InstagramDataAnalyzer.get_json_for_certain_path(path,
+        return InstagramDataRetreiver.get_json_for_certain_path(path,
                                                                ["ads_and_businesses"],
                                                                "advertisers_using_your_activity_or_information.json")["ig_custom_audiences_all_types"]
 
@@ -76,7 +75,7 @@ class InstagramDataAnalyzer():
                                                      'Safari/537.36'}}
         }
         """
-        return InstagramDataAnalyzer.get_json_for_certain_path(path,
+        return InstagramDataRetreiver.get_json_for_certain_path(path,
                                                                ["login_and_account_creation"],
                                                                "login_activity.json")["account_history_login_history"]
 
@@ -106,13 +105,15 @@ class InstagramDataAnalyzer():
                 break
         if username_folder is None:
             raise FileNotFoundError(f"Username '{username}' was not found.\nPlease not that Instagram sometimes exports the "
-                                    f"name instead of the username, so make sure to try both."
+                                    f"name instead of the username, so make sure to try both. "
                                     f"At the moment, there is no chat history with '{username}'")
 
-        return InstagramDataAnalyzer.get_json_for_certain_path(path,
+        return InstagramDataRetreiver.get_json_for_certain_path(path,
                                                                ["messages", "inbox", username_folder],
                                                                "message_1.json"
                                                                )["messages"]
+class InstagramDataAnalyzer():
+
     @staticmethod
     def count_year_and_months_for_login_activity(path: str):
         """
@@ -123,7 +124,7 @@ class InstagramDataAnalyzer():
          '2021-11': 69,
           '2021-10': 96 ...}
         """
-        dates = InstagramDataAnalyzer.get_login(path)
+        dates = InstagramDataRetreiver.get_login(path)
         counts = {}
         for login_activity in dates:
             date_of_login = login_activity["title"]
@@ -143,7 +144,7 @@ class InstagramDataAnalyzer():
         {"Name1": [ [message1, message2 ... messageN], [timestamp1, timestamp2 ... timestampN] ],
          "Name2": ...}
         """
-        messages = InstagramDataAnalyzer.get_messages(path, chat_name)
+        messages = InstagramDataRetreiver.get_messages(path, chat_name)
 
         senders = {} # senders = {"Name": [ [message1, message2 ... messageN], [timestamp1, timestamp2 ... timestampN] ] }
 
@@ -165,5 +166,5 @@ if __name__ == '__main__':
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    alpha = InstagramDataAnalyzer.get_messages(path_to_data, "test")
+    alpha = InstagramDataRetreiver.get_messages(path_to_data, "test")
     print(alpha[0])
