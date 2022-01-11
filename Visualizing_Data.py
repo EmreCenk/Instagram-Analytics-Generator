@@ -91,5 +91,6 @@ if __name__ == '__main__':
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
+    # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
-    InstagramDataVisualizer.vizualize_message_count_over_time(path_to_data, "")
+    InstagramDataVisualizer.vizualize_message_count_over_time(path_to_data, "thesimpsons_457uupaoka")

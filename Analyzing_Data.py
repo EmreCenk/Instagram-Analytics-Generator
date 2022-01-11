@@ -81,6 +81,9 @@ class InstagramDataAnalyzer():
                                                                "login_activity.json")["account_history_login_history"]
 
     @staticmethod
+    def list_chats(root_path: str):
+        return os.listdir(os.path.join(root_path, "messages", "inbox"))
+    @staticmethod
     def get_messages(path: str, username: str) -> List[dict]:
         """
         :param path: root path
