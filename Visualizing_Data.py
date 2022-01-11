@@ -23,7 +23,20 @@ class InstagramDataVisualizer:
 
     @staticmethod
     def vizualize_message_length_over_time(path: str, chat_name: str):
-
+        to_plot = InstagramDataAnalyzer.get_message_length_over_time(path, chat_name)
+        for username in to_plot:
+            asdf = username
+        xs, ys = to_plot[asdf][1], to_plot[asdf][0]
+        print(xs)
+        print(ys)
+        xs.reverse()
+        ys.reverse()
+        plt.plot(xs, ys, label="login number")
+        plt.xlabel("date (year-month)")
+        plt.ylabel("number of logins")
+        plt.legend()
+        plt.grid()
+        plt.show()
 
 if __name__ == '__main__':
     import os
@@ -32,4 +45,5 @@ if __name__ == '__main__':
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    InstagramDataVisualizer.visualize_logins(path_to_data)
+    # InstagramDataVisualizer.visualize_logins(path_to_data)
+    InstagramDataVisualizer.vizualize_message_length_over_time(path_to_data, "")

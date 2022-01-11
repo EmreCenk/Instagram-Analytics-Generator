@@ -131,7 +131,7 @@ class InstagramDataAnalyzer():
         return counts
 
     @staticmethod
-    def get_message_length_over_time(path: str, chat_name: str) -> Dict[str, List[List[int], List[int]]]:
+    def get_message_length_over_time(path: str, chat_name: str) -> Dict[str, List[List[int]]]:
         """
         :param path: root to download export
         :param chat_name: name of chat history to count
@@ -151,7 +151,7 @@ class InstagramDataAnalyzer():
             timestamp = messages[i]["timestamp_ms"]
             value = messages[i]["content"]
 
-            if sender not in senders: senders[sender] = [[value], [timestamp]]
+            if sender not in senders: senders[sender] = [[len(value)], [timestamp]]
             else:
                 senders[sender][0].append(len(value))
                 senders[sender][1].append(timestamp)
