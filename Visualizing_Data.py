@@ -14,7 +14,7 @@ class InstagramDataVisualizer:
         xs.reverse()
         ys.reverse()
         plt.plot(xs, ys, label="login number")
-        plt.xlabel("date (month-date)")
+        plt.xlabel("date (year-month)")
         plt.ylabel("number of logins")
         plt.legend()
         plt.grid()

@@ -19,14 +19,14 @@ def different_cwd(path: str):
 class InstagramDataAnalyzer():
 
     @staticmethod
-    def get_json_for_certain_path(root_path: str, second_layer: str, third_layer: str):
+    def get_json_for_certain_path(root_path: str, layers: List[str], file_name: str):
         """
         :param root_path: path to root of the downloaded export
-        :param second_layer: the second directory from root
-        :param third_layer: Name of file to open
+        :param layers: list of the directories you need to travel to in order to acces file_name
+        :param file_name: Name of file to open
         :return:
         """
-        path_to_ads = os.path.join(root_path, second_layer, third_layer)
+        path_to_ads = os.path.join(root_path, *layers, file_name)
         with open(path_to_ads) as ad_file:
             data = json.load(ad_file)
         return data
@@ -46,7 +46,7 @@ class InstagramDataAnalyzer():
         """
         # Finding path to ads from root:
         return InstagramDataAnalyzer.get_json_for_certain_path(path,
-                                                               "ads_and_businesses",
+                                                               ["ads_and_businesses"],
                                                                "advertisers_using_your_activity_or_information.json")["ig_custom_audiences_all_types"]
 
     @staticmethod
@@ -77,8 +77,39 @@ class InstagramDataAnalyzer():
         }
         """
         return InstagramDataAnalyzer.get_json_for_certain_path(path,
-                                                               "login_and_account_creation",
+                                                               ["login_and_account_creation"],
                                                                "login_activity.json")["account_history_login_history"]
+
+    @staticmethod
+    def get_messages(path: str, username: str) -> List[dict]:
+        """
+        :param path: root path
+        :param username: username of person you want to extract chats with
+        :return: List of dictionaries. Each index is a separate message stored as a dictionary.
+        Each entry in the list has the following format:
+        {'sender_name': 'Emre Cenk',
+         'timestamp_ms': 1641678929234,
+         'content': "message content",
+         'type': 'Generic',
+         'is_unsent': False}
+
+        """
+        username_folder = None
+        for folder_name in os.listdir(os.path.join(path, "messages", "inbox")):
+
+            if len(folder_name) < len(username): continue
+            if folder_name[:len(username)] == username:
+                username_folder = folder_name
+                break
+        if username_folder is None:
+            raise FileNotFoundError(f"Username '{username}' was not found.\nPlease not that Instagram sometimes exports the "
+                                    f"name instead of the username, so make sure to try both."
+                                    f"At the moment, there is no chat history with '{username}'")
+
+        return InstagramDataAnalyzer.get_json_for_certain_path(path,
+                                                               ["messages", "inbox", username_folder],
+                                                               "message_1.json"
+                                                               )["messages"]
     @staticmethod
     def count_year_and_months_for_login_activity(path: str):
         """
@@ -106,6 +137,5 @@ if __name__ == '__main__':
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    companies = InstagramDataAnalyzer.get_marketing_list(path_to_data)
-    w = InstagramDataAnalyzer.count_year_and_months_for_login_activity(path_to_data)
-    print(w)
+    alpha = InstagramDataAnalyzer.get_messages(path_to_data, "test")
+    print(alpha[0])
