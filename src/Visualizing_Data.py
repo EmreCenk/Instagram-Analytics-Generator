@@ -30,7 +30,7 @@ class InstagramDataVisualizer:
         plt.show()
 
     @staticmethod
-    def vizualize_message_length_over_time(path: str,
+    def visualize_message_length_over_time(path: str,
                                            chat_name: str,
                                            interval: int = 3) -> None:
         """
@@ -86,7 +86,7 @@ class InstagramDataVisualizer:
         plt.show()
 
     @staticmethod
-    def vizualize_message_count_over_time(path: str, chat_name: str) -> None:
+    def visualize_message_count_over_time(path: str, chat_name: str) -> None:
         """
         Vizualizes message count over time for a given chat.
         :param path: path to root
@@ -121,6 +121,43 @@ class InstagramDataVisualizer:
         plt.legend()
         plt.grid()
         plt.show()
+
+    @staticmethod
+    def visualize_unique_words(path: str, chat_name: str, word_limit_in_pie: int = 10):
+        """
+        Vizualizes word count for  given chat
+        :param path: path to root
+        :param chat_name: name of chat
+        :param word_limit_in_pie: number of top used words to go into pie. for instance, word_limit_in_pie = 10 would mean
+        the pie would only include the top 10 most used words in groupchat
+        :return: None
+        """
+        words = InstagramDataAnalyzer.get_word_distribution(path, chat_name)
+        total = 0
+        a = {}
+        for word, v in sorted(words.items(), key=lambda item: item[1], reverse = True):
+            a[word] = v
+            total += v
+
+        i = 0
+        labels = []
+        sizes = []
+        in_pie = 0
+        for word in a:
+            if i > word_limit_in_pie - 1: break
+            sizes.append(100*a[word] / total)
+            in_pie += 100 * a[word] / total
+            labels.append(word)
+            i += 1
+        # labels.append("other")
+        # sizes.append(100 - in_pie)
+
+        fig1, ax1 = plt.subplots()
+        ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
+                shadow=True, startangle=90)
+        ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+        plt.show()
 if __name__ == '__main__':
     import os
     from dotenv import load_dotenv
@@ -130,4 +167,4 @@ if __name__ == '__main__':
     path_to_data = os.environ["path_to_instagram_export_download"]
     # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
-    InstagramDataVisualizer.vizualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka", interval = 3)
+    InstagramDataVisualizer.visualize_unique_words(path_to_data, "thesimpsons_457uupaoka")
