@@ -129,7 +129,7 @@ class InstagramDataVisualizer:
         :param path: path to root
         :param chat_name: name of chat
         :param word_limit_in_pie: number of top used words to go into pie. for instance, word_limit_in_pie = 10 would mean
-        the pie would only include the top 10 most used words in chay
+        the pie would only include the top 10 most used words in chat
         :return: None
         """
         words = InstagramDataAnalyzer.get_word_distribution(path, chat_name)
@@ -144,7 +144,7 @@ class InstagramDataVisualizer:
         sizes = []
         in_pie = 0
         for word in a:
-            if i > word_limit_in_pie - 1: break
+            if i > word_limit_in_pie: break
             sizes.append(100*a[word] / total)
             in_pie += 100 * a[word] / total
             labels.append(word)
@@ -154,9 +154,9 @@ class InstagramDataVisualizer:
 
         fig1, ax1 = plt.subplots()
         ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
-                shadow=True, startangle=90)
+                shadow=True)
         ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
+        print(labels, sizes)
         plt.show()
 if __name__ == '__main__':
     import os
