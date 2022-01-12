@@ -2,7 +2,7 @@ from src.Analyzing_Data import InstagramDataAnalyzer
 import matplotlib.pyplot as plt
 from datetime import datetime
 from dateutil import parser
-
+from typing import Dict
 
 class InstagramDataVisualizer:
 
@@ -123,6 +123,32 @@ class InstagramDataVisualizer:
         plt.show()
 
     @staticmethod
+    def pie_chart_for_word_frequency(word_dict: Dict[str, int], word_limit_in_pie: int, total: int = None):
+        if total is None:
+            total = 0
+            for word in word_dict: total += word_dict[word]
+
+        i = 0
+        labels = []
+        sizes = []
+        in_pie = 0
+        for word in word_dict:
+            if i > word_limit_in_pie: break
+            sizes.append(100 * word_dict[word] / total)
+            labels.append(word)
+            in_pie += 100 * word_dict[word] / total
+            i += 1
+        if 100 - in_pie > 0.01:
+            labels.append("other")
+            sizes.append(100 - in_pie)
+
+        fig1, ax1 = plt.subplots()
+        ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
+                shadow=False)
+        ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        print(labels, sizes)
+        plt.show()
+    @staticmethod
     def visualize_unique_words(path: str, chat_name: str, word_limit_in_pie: int = 10):
         """
         Vizualizes word count for  given chat
@@ -138,26 +164,29 @@ class InstagramDataVisualizer:
         for word, v in sorted(words.items(), key=lambda item: item[1], reverse = True):
             a[word] = v
             total += v
+        InstagramDataVisualizer.pie_chart_for_word_frequency(a, word_limit_in_pie, total)
 
-        i = 0
-        labels = []
-        sizes = []
-        in_pie = 0
-        for word in a:
-            if i > word_limit_in_pie: break
-            sizes.append(100*a[word] / total)
-            in_pie += 100 * a[word] / total
-            labels.append(word)
-            i += 1
-        labels.append("other")
-        sizes.append(100 - in_pie)
 
-        fig1, ax1 = plt.subplots()
-        ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
-                shadow=True)
-        ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-        print(labels, sizes)
-        plt.show()
+    @staticmethod
+    def visualize_mention_number_in_chat(path: str, chat_name: str):
+        """
+        Visualizes how many times each person is mentioned in a chat
+        :param path: path to root
+        :param chat_name: name of chat
+        :return: None
+        """
+        words = InstagramDataAnalyzer.get_word_distribution(path, chat_name)
+        mentions = {}
+        for word in words:
+            if "@" == word[0]:
+                mentions[word] =  words[word]
+        sorted_mentions = {k: v for k, v in sorted(mentions.items(), key=lambda item: item[1], reverse = True)}
+
+        InstagramDataVisualizer.pie_chart_for_word_frequency(sorted_mentions, len(sorted_mentions))
+
+
+
+
 if __name__ == '__main__':
     import os
     from dotenv import load_dotenv
@@ -167,4 +196,4 @@ if __name__ == '__main__':
     path_to_data = os.environ["path_to_instagram_export_download"]
     # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
-    InstagramDataVisualizer.visualize_unique_words(path_to_data, "thesimpsons_457uupaoka")
+    InstagramDataVisualizer.visualize_mention_number_in_chat(path_to_data, "thesimpsons_457uupaoka")
