@@ -135,7 +135,10 @@ class InstagramDataVisualizer:
         for word in word_dict:
             if i > word_limit_in_pie: break
             sizes.append(100 * word_dict[word] / total)
-            labels.append(word)
+            l = word + f" ({word_dict[word]} mention"
+            if word_dict[word] > 1: l+="s"
+            l+=")"
+            labels.append(l)
             in_pie += 100 * word_dict[word] / total
             i += 1
         if 100 - in_pie > 0.01:
