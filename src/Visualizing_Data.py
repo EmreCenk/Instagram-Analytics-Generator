@@ -123,7 +123,12 @@ class InstagramDataVisualizer:
         plt.show()
 
     @staticmethod
-    def pie_chart_for_word_frequency(word_dict: Dict[str, int], word_limit_in_pie: int, total: int = None):
+    def pie_chart_for_word_frequency(word_dict: Dict[str, int],
+                                     word_limit_in_pie: int,
+                                     total: int = None,
+                                     title: str = "",
+                                     x_axis_title: str = "",
+                                     y_axis_title: str = ""):
         if total is None:
             total = 0
             for word in word_dict: total += word_dict[word]
@@ -149,7 +154,9 @@ class InstagramDataVisualizer:
         ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
                 shadow=False)
         ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-        print(labels, sizes)
+        plt.title(title)
+        plt.xlabel(x_axis_title)
+        plt.ylabel(y_axis_title)
         plt.show()
     @staticmethod
     def visualize_unique_words(path: str, chat_name: str, word_limit_in_pie: int = 10):
@@ -167,7 +174,10 @@ class InstagramDataVisualizer:
         for word, v in sorted(words.items(), key=lambda item: item[1], reverse = True):
             a[word] = v
             total += v
-        InstagramDataVisualizer.pie_chart_for_word_frequency(a, word_limit_in_pie, total)
+        InstagramDataVisualizer.pie_chart_for_word_frequency(a,
+                                                             word_limit_in_pie,
+                                                             total,
+                                                             title = f"Word Usage in {chat_name}")
 
 
     @staticmethod
@@ -185,7 +195,9 @@ class InstagramDataVisualizer:
                 mentions[word] =  words[word]
         sorted_mentions = {k: v for k, v in sorted(mentions.items(), key=lambda item: item[1], reverse = True)}
 
-        InstagramDataVisualizer.pie_chart_for_word_frequency(sorted_mentions, len(sorted_mentions))
+        InstagramDataVisualizer.pie_chart_for_word_frequency(sorted_mentions,
+                                                             len(sorted_mentions),
+                                                             title = f"Number of mentions with {chat_name}")
 
 
 
