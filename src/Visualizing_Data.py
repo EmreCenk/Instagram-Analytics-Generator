@@ -252,14 +252,49 @@ class InstagramDataVisualizer:
             else: categorized_by_date[follow_date] = [person]
 
 
+        #plotting data:
         xs, ys = [], []
+        names = []
+        fig, ax = plt.subplots()
 
         for date in categorized_by_date:
             xs.append(date)
             ys.append(len(categorized_by_date[date]))
+            names.append("")
+            for person in categorized_by_date[date]:
 
+                names[-1] += person["string_list_data"][0]["value"] + "\n"
 
-        plt.plot(xs, ys)
+        line, = plt.plot(xs, ys, marker = "o")
+        annot = ax.annotate("", xy=(0, 0),
+                            xytext=(-20, 20),
+                            textcoords="offset points",
+                            bbox=dict(boxstyle="round", fc="w"),
+                            arrowprops=dict(arrowstyle="->"))
+        annot.set_visible(False)
+
+        def update_annot(ind):
+            x, y = line.get_data()
+            annot.xy = (x[ind["ind"][0]], y[ind["ind"][0]])
+            text = "Followers gained:\n{}".format(" ".join([names[n] for n in ind["ind"]]))
+            annot.set_text(text)
+            annot.get_bbox_patch().set_alpha(0.4)
+
+        def hover(event):
+            vis = annot.get_visible()
+            if event.inaxes == ax:
+                cont, ind = line.contains(event)
+                if cont:
+                    update_annot(ind)
+                    annot.set_visible(True)
+                    fig.canvas.draw_idle()
+                else:
+                    if vis:
+                        annot.set_visible(False)
+                        fig.canvas.draw_idle()
+
+        fig.canvas.mpl_connect("motion_notify_event", hover)
+
         plt.title(f"Followers gained")
         plt.xlabel("date")
         plt.ylabel("follower number")
