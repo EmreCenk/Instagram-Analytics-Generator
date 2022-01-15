@@ -1,4 +1,5 @@
 from src.Analyzing_Data import InstagramDataAnalyzer
+from src.popups import create_popup_message
 import matplotlib.pyplot as plt
 from datetime import datetime
 from dateutil import parser
@@ -265,7 +266,7 @@ class InstagramDataVisualizer:
 
                 names[-1] += person["string_list_data"][0]["value"] + "\n"
 
-        ax.plot_date(xs, ys, marker = "o", picker=5)
+        ax.plot_date(xs, ys, picker=5)
         plt.plot(xs, ys)
 
 
@@ -284,7 +285,14 @@ class InstagramDataVisualizer:
 
                 for person in categorized_by_date[dates[i]]:
                     current_followers += person["string_list_data"][0]["value"] + "\n"
-                print(current_followers, current_follower_num)
+                popup_title = f"{current_follower_num} follower"
+                if current_follower_num > 1: popup_title += "s"
+                popup_title += f" gained on\n{dates[i]}:"
+                create_popup_message(
+                    message = current_followers,
+                    title_in_popup = popup_title,
+                    window_title = "Follower information")
+                break #todo: implement threads to create multiple windows when data points coincide
             # print(how_many)
             # print(dates)
             # print()
