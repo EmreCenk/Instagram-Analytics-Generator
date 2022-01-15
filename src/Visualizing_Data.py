@@ -222,9 +222,9 @@ class InstagramDataVisualizer:
                                                              title = f"Number of mentions with {chat_name}")
 
     @staticmethod
-    def visualize_followers_over_time(path: str, interval: int = 1):
+    def visualize_follower_gain_over_time(path: str, interval: int = 1):
         """
-        Visualizes follower count over time
+        Visualizes follower gain over time
         :param path: path to root
         :param interval: an integer between 0 and 3 inclusive that specifies what interval the messages will be plotted in.
         See InstagramDataRetreiver.get_time_string for more information
@@ -279,4 +279,4 @@ if __name__ == '__main__':
     # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
     # InstagramDataVisualizer.visualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
-    InstagramDataVisualizer.visualize_followers_over_time(path_to_data)
+    InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data)
