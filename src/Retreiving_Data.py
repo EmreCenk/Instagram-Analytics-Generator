@@ -7,8 +7,9 @@ class InstagramDataRetreiver():
     @staticmethod
     def get_json_for_certain_path(root_path: str, layers: List[str], file_name: str):
         """
+        Exports the json values from a given path
         :param root_path: path to root of the downloaded export
-        :param layers: list of the directories you need to travel to in order to acces file_name
+        :param layers: list of the directories you need to travel to in order to access file_name
         :param file_name: Name of file to open
         :return:
         """
@@ -99,3 +100,45 @@ class InstagramDataRetreiver():
                                                                ["messages", "inbox", username_folder],
                                                                "message_1.json"
                                                                )["messages"]
+
+    @staticmethod
+    def get_followers(path: str):
+        """
+        Gets a list of followers from path
+        :param path: root path
+        :return: List of dictionaries. Each index is a separate follower stored as a dictionary.
+        Each entry in the list has the following format:
+        {'media_list_data': [],
+         'string_list_data': [{'href': 'https://www.instagram.com/thepipernews',
+                               'timestamp': 1640891412,
+                               'value': 'thepipernews'}],
+         'title': ''}
+
+        """
+        return InstagramDataRetreiver.get_json_for_certain_path(path, ["followers_and_following"], "followers.json")["relationships_followers"]
+
+    @staticmethod
+    def get_following(path: str):
+        """
+        Gets a list of followers from path
+        :param path: root path
+        :return: List of dictionaries. Each index is a separate follower stored as a dictionary.
+        Each entry in the list has the following format:
+        {'media_list_data': [],
+         'string_list_data': [{'href': 'https://www.instagram.com/thepipernews',
+                               'timestamp': 1640891412,
+                               'value': 'thepipernews'}],
+         'title': ''}
+
+        """
+        return InstagramDataRetreiver.get_json_for_certain_path(path, ["followers_and_following"], "following.json")["relationships_following"]
+if __name__ == '__main__':
+    import os
+    from pprint import pprint
+    from dotenv import load_dotenv
+    load_dotenv()
+    print = pprint
+    path_to_data = os.environ["path_to_instagram_export_download"]
+    a = InstagramDataRetreiver.get_following(path_to_data)
+    print(len(a))
+    print(len(InstagramDataRetreiver.get_followers(path_to_data)))
