@@ -265,35 +265,32 @@ class InstagramDataVisualizer:
 
                 names[-1] += person["string_list_data"][0]["value"] + "\n"
 
-        line, = plt.plot(xs, ys, marker = "o")
-        annot = ax.annotate("", xy=(0, 0),
-                            xytext=(-20, 20),
-                            textcoords="offset points",
-                            bbox=dict(boxstyle="round", fc="w"),
-                            arrowprops=dict(arrowstyle="->"))
-        annot.set_visible(False)
+        ax.plot_date(xs, ys, marker = "o", picker=5)
+        plt.plot(xs, ys)
 
-        def update_annot(ind):
-            x, y = line.get_data()
-            annot.xy = (x[ind["ind"][0]], y[ind["ind"][0]])
-            text = "Followers gained:\n{}".format(" ".join([names[n] for n in ind["ind"]]))
-            annot.set_text(text)
-            annot.get_bbox_patch().set_alpha(0.4)
 
-        def hover(event):
-            vis = annot.get_visible()
-            if event.inaxes == ax:
-                cont, ind = line.contains(event)
-                if cont:
-                    update_annot(ind)
-                    annot.set_visible(True)
-                    fig.canvas.draw_idle()
-                else:
-                    if vis:
-                        annot.set_visible(False)
-                        fig.canvas.draw_idle()
 
-        fig.canvas.mpl_connect("motion_notify_event", hover)
+
+        def on_pick(event):
+            line = event.artist
+            xdata, ydata = line.get_data()
+            ind = event.ind
+            how_many = ydata[ind]
+            dates = xdata[ind]
+
+            for i in range(len(how_many)):
+                current_follower_num = how_many[i]
+                current_followers = ""
+
+                for person in categorized_by_date[dates[i]]:
+                    current_followers += person["string_list_data"][0]["value"] + "\n"
+                print(current_followers, current_follower_num)
+            # print(how_many)
+            # print(dates)
+            # print()
+            print()
+
+        fig.canvas.mpl_connect('pick_event', on_pick)
 
         plt.title(f"Followers gained")
         plt.xlabel("date")
@@ -314,4 +311,4 @@ if __name__ == '__main__':
     # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
     # InstagramDataVisualizer.visualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
-    InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data)
+    InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data, interval = 4)
