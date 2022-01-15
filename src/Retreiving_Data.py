@@ -7,7 +7,7 @@ class InstagramDataRetreiver():
     @staticmethod
     def get_json_for_certain_path(root_path: str, layers: List[str], file_name: str):
         """
-        Exports the json values from a given path
+        Exports the json values from a given path as dictionaries
         :param root_path: path to root of the downloaded export
         :param layers: list of the directories you need to travel to in order to access file_name
         :param file_name: Name of file to open
@@ -71,7 +71,7 @@ class InstagramDataRetreiver():
     def list_chats(root_path: str):
         return os.listdir(os.path.join(root_path, "messages", "inbox"))
     @staticmethod
-    def get_messages(path: str, username: str) -> List[dict]:
+    def get_messages(path: str, username: str) -> List[Dict]:
         """
         :param path: root path
         :param username: username of person you want to extract chats with
@@ -102,7 +102,7 @@ class InstagramDataRetreiver():
                                                                )["messages"]
 
     @staticmethod
-    def get_followers(path: str):
+    def get_followers(path: str) -> List[Dict]:
         """
         Gets a list of followers from path
         :param path: root path

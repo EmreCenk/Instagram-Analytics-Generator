@@ -79,7 +79,7 @@ class InstagramDataAnalyzer():
         for i in range(len(messages) - 1, -1, -1):
             if "content" not in messages[i]: continue #it's a message that contains an image
             value = messages[i]["content"].lower().replace(",", "")
-            if "reacted â¤ï¸ to your message" in value: continue
+            if "reacted â¤ï¸ to your message" in value: continue #Reacting to messages contaminate the word count
             for word in value.split(" "):
                 if word == "": continue
                 if word not in counting: counting[word] = 1
