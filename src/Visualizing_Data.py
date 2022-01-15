@@ -109,6 +109,8 @@ class InstagramDataVisualizer:
         :param chat_name: name of chat
         :return: None
         """
+
+        #todo: implement time strings to customize plot intervals on x axis
         colors = ['red', 'blue', 'darkkhaki', 'green', 'orange', 'purple', 'brown', 'pink', 'teal', 'maroon', 'cyan', 'magenta', 'navy', 'lime', 'olive', 'lavender', 'mauve', 'umber', 'murk', 'black', 'gray']
 
 
@@ -219,6 +221,51 @@ class InstagramDataVisualizer:
                                                              len(sorted_mentions),
                                                              title = f"Number of mentions with {chat_name}")
 
+    @staticmethod
+    def visualize_followers_over_time(path: str, interval: int = 1):
+        """
+        Visualizes follower count over time
+        :param path: path to root
+        :param interval: an integer between 0 and 3 inclusive that specifies what interval the messages will be plotted in.
+        See InstagramDataRetreiver.get_time_string for more information
+        interval values:
+        0 -> yearly intervals
+        1 -> monthly intervals
+        2 -> daily intervals
+        3 -> hourly interval
+        4 -> Minute intervals (may misrepresent data since a long message will create extreme spikes)
+        :return: None
+
+        """
+        time_string = InstagramDataVisualizer.get_time_string(interval)
+        followers = InstagramDataRetreiver.get_followers(path)
+
+        followers = sorted(followers, key = lambda person: person["string_list_data"][0]["timestamp"])
+
+        categorized_by_date = {}
+        for person in followers:
+            # timestamps[i] = datetime.fromtimestamp(int(timestamps[i]) / 1000)
+            # cache = parser.parse(timestamps[i].strftime(time_string))
+            follow_date = datetime.fromtimestamp(int(person["string_list_data"][0]["timestamp"]))
+            follow_date = parser.parse(follow_date.strftime(time_string))
+            if follow_date in categorized_by_date: categorized_by_date[follow_date].append(person)
+            else: categorized_by_date[follow_date] = [person]
+
+
+        xs, ys = [], []
+
+        for date in categorized_by_date:
+            xs.append(date)
+            ys.append(len(categorized_by_date[date]))
+
+
+        plt.plot(xs, ys)
+        plt.title(f"Followers gained")
+        plt.xlabel("date")
+        plt.ylabel("follower number")
+        plt.legend()
+        plt.grid()
+        plt.show()
 
 
 
@@ -231,4 +278,5 @@ if __name__ == '__main__':
     path_to_data = os.environ["path_to_instagram_export_download"]
     # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
-    InstagramDataVisualizer.visualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
+    # InstagramDataVisualizer.visualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
+    InstagramDataVisualizer.visualize_followers_over_time(path_to_data)
