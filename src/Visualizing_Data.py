@@ -5,6 +5,7 @@ from datetime import datetime
 from dateutil import parser
 from typing import Dict
 from src.Retreiving_Data import InstagramDataRetreiver
+from collections import defaultdict
 
 class InstagramDataVisualizer:
 
@@ -31,6 +32,21 @@ class InstagramDataVisualizer:
         plt.grid()
         plt.show()
 
+    @staticmethod
+    def get_x_axis_label(interval: int) -> str:
+        """
+        Gets a corresponding x axis title according to the interval value passed into InstagramDataVisualizer.get_time_string
+        :param interval:
+        :return: a title specifying the date intervals
+        """
+
+        a = defaultdict(str)
+        a[0] = "(Yearly Intervals)"
+        a[1] = "(Monthly Intervals)"
+        a[2] = "(Daily Intervals)"
+        a[3] = "(Hour Intervals)"
+        a[4] = "(Minute Intervals)"
+        return "date \n" + a[interval]
     @staticmethod
     def get_time_string(interval: int = 3) -> str:
         """
@@ -284,7 +300,8 @@ class InstagramDataVisualizer:
                 current_followers = ""
 
                 for person in categorized_by_date[dates[i]]:
-                    current_followers += person["string_list_data"][0]["value"] + "\n"
+                    print(person)
+                    current_followers += person["string_list_data"][0]["value"] +"\n"
                 popup_title = f"{current_follower_num} follower"
                 if current_follower_num > 1: popup_title += "s"
                 popup_title += f" gained on\n{dates[i]}:"
@@ -293,15 +310,11 @@ class InstagramDataVisualizer:
                     title_in_popup = popup_title,
                     window_title = "Follower information")
                 break #todo: implement threads to create multiple windows when data points coincide
-            # print(how_many)
-            # print(dates)
-            # print()
-            print()
 
         fig.canvas.mpl_connect('pick_event', on_pick)
 
         plt.title(f"Followers gained")
-        plt.xlabel("date")
+        plt.xlabel(InstagramDataVisualizer.get_x_axis_label(interval))
         plt.ylabel("follower number")
         plt.legend()
         plt.grid()
@@ -319,4 +332,4 @@ if __name__ == '__main__':
     # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
     # InstagramDataVisualizer.visualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
-    InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data, interval = 4)
+    InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data, interval = 0)
