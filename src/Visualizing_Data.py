@@ -300,8 +300,11 @@ class InstagramDataVisualizer:
                 current_followers = ""
 
                 for person in categorized_by_date[dates[i]]:
-                    print(person)
-                    current_followers += person["string_list_data"][0]["value"] +"\n"
+                    # print(person)
+                    date_followed = datetime.fromtimestamp(person['string_list_data'][0]['timestamp'])
+                    cache = parser.parse(date_followed.strftime("%m/%d/%Y, %H:%M:%S"))
+
+                    current_followers += f"{person['string_list_data'][0]['value']}\t\t\t\t[{date_followed}]\n"
                 popup_title = f"{current_follower_num} follower"
                 if current_follower_num > 1: popup_title += "s"
                 popup_title += f" gained on\n{dates[i]}:"
