@@ -7,6 +7,8 @@ from dateutil import parser
 from src import utils
 from datetime import datetime
 from collections import defaultdict
+from warnings import warn
+
 @contextmanager
 def different_cwd(path: str):
     """
@@ -90,11 +92,11 @@ class InstagramDataAnalyzer():
         return counting
 
     @staticmethod
-    def count_active_chats_per_day(path: str, username: str) -> (Dict[datetime.date, str], Dict[datetime.date, str]):
+    def count_active_chats_per_day(path: str, name_of_owner: str = "") -> (Dict[datetime.date, str], Dict[datetime.date, str]):
         """
         counts number of active chats per day
         :param path: path to root folder
-        :param username: Username of the owner of the folder.
+        :param name_of_owner: Instagram name of owner
         todo: add functionality to infer who the owner is by finding the intersection of usernames from 2 dms.
 
         :return: (received messages per day, sent messages per day)
@@ -115,9 +117,12 @@ class InstagramDataAnalyzer():
                 message_date = message["timestamp_ms"]
                 message_date = datetime.fromtimestamp(int(message_date / 1000))
                 message_date = parser.parse(message_date.strftime(time_string))
-                if message["sender_name"] == username: sent[message_date] += 1
+
+                if message["sender_name"] == name_of_owner: sent[message_date] += 1
                 else: received[message_date] += 1
 
+        if len(sent) == 0:
+            warn(f"\nIt appears {name_of_owner} has sent 0 messages in the entire history of your account. This is probably due to a mistake in the 'name_of_owner' variable specified.\nPlease make sure '{name_of_owner}' is the correct name.")
         return received, sent
 if __name__ == '__main__':
     from dotenv import load_dotenv
@@ -125,7 +130,7 @@ if __name__ == '__main__':
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    for k in InstagramDataAnalyzer.count_active_chats_per_day(path_to_data, "emre.cenk99"):
+    for k in InstagramDataAnalyzer.count_active_chats_per_day(path_to_data, "Emre Cenk"):
         print(k)
     # print(
     #     InstagramDataAnalyzer.get_word_distribution(path_to_data, "thesimpsons_457uupaoka")
