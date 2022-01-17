@@ -96,13 +96,13 @@ class InstagramDataAnalyzer():
         """
         counts number of active chats per day
         :param path: path to root folder
-        :param name_of_owner: Instagram name of owner
+        :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one)
         todo: add functionality to infer who the owner is by finding the intersection of usernames from 2 dms.
 
         :return: (received messages per day, sent messages per day)
         2 dictionaries that map dates to how many active chats are on that day.
         The first dictionary -> how many messages were received on each date
-        Second Dictionary -> how many messages the user sent on each date
+        Second Dictionary -> how many messages 'name_of_owner' sent on each date
         """
 
         chats = InstagramDataRetreiver.list_chats(path)
