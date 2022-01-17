@@ -6,6 +6,7 @@ from dateutil import parser
 from typing import Dict
 from src.Retreiving_Data import InstagramDataRetreiver
 from collections import defaultdict
+from src import utils
 
 class InstagramDataVisualizer:
 
@@ -50,27 +51,11 @@ class InstagramDataVisualizer:
     @staticmethod
     def get_time_string(interval: int = 3) -> str:
         """
-        Gets a time string in the format of "%Y-%m-%d ..."
-        :param interval: an integer between 0 and 3 inclusive that specifies what how detailed the time string will be
-        The following is the meaning for interval values:
-        0 -> year
-        1 -> month
-        2 -> dail
-        3 -> hour
-        4 -> Minute
-        return: string to parse time
+        Wrapper function for utils.get_time_string
+        Originally, the function was written under the InstagramDataVisualizer class, but was then moved to utils.
+        Instead of changing every occurrence, I just converted this to a wrapper.
         """
-        if interval < 0 or interval > 4:
-            raise ValueError(f"'interval' argument must be one of 0, 1, 2, 3, 4."
-                             f"\nThe interval meanings are as follows:"
-                             "\n0 -> yearly intervals\n1 -> monthly intervals\n2 -> daily intervals\n3 -> hourly interval\n4 -> Minute intervals (may misrepresent data since a long message will create extreme spikes)"
-                             f"\n\n{interval} is not a valid interval")
-        times = ["%Y", "%m", "%d", "%H"]
-        time_string = ""
-        for i in range(min(len(times), interval + 1)): time_string += times[i] + "-"
-        time_string = time_string[:-1]
-        if interval == 4: time_string += ":%M"
-        return time_string
+        return utils.get_time_string(interval)
     @staticmethod
     def visualize_message_length_over_time(path: str,
                                            chat_name: str,
@@ -335,4 +320,5 @@ if __name__ == '__main__':
     # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
     # InstagramDataVisualizer.visualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
-    InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data, interval = 0)
+    InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data,
+                                                              interval = 2)

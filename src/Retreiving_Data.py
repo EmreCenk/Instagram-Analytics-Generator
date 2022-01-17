@@ -69,6 +69,10 @@ class InstagramDataRetreiver():
 
     @staticmethod
     def list_chats(root_path: str):
+        """
+        :param root_path: path to export root
+        :return: list of chat names
+        """
         return os.listdir(os.path.join(root_path, "messages", "inbox"))
     @staticmethod
     def get_messages(path: str, username: str) -> List[Dict]:

@@ -1,9 +1,12 @@
+import datetime
 import os
 from contextlib import contextmanager
 from typing import List, Dict
 from Retreiving_Data import InstagramDataRetreiver
 from dateutil import parser
-
+from src import utils
+from datetime import datetime
+from collections import defaultdict
 @contextmanager
 def different_cwd(path: str):
     """
@@ -86,14 +89,38 @@ class InstagramDataAnalyzer():
                 else: counting[word] += 1
         return counting
 
+    @staticmethod
+    def count_active_chats_per_day(path: str) -> Dict[datetime.date, str]:
+        """
+        counts number of active chats per day
+        :param path: path to root folder
+        :return: A dictionary that maps dates to how many active chats are on that day
+        """
+
+        chats = InstagramDataRetreiver.list_chats(path)
+        time_string = utils.get_time_string(interval=2)
+
+        def zero(): return 0
+        counts = defaultdict(zero)
+        for conversation_name in chats:
+            convo = InstagramDataRetreiver.get_messages(path, conversation_name)
+            for message in convo:
+                message_date = message["timestamp_ms"]
+                message_date = datetime.fromtimestamp(int(message_date / 1000))
+                message_date = parser.parse(message_date.strftime(time_string))
+                counts[message_date] += 1
+
+        return counts
 if __name__ == '__main__':
     from dotenv import load_dotenv
     load_dotenv()
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    print(
-        InstagramDataAnalyzer.get_word_distribution(path_to_data, "thesimpsons_457uupaoka")
-    )
+    for k in InstagramDataAnalyzer.count_active_chats_per_day(path_to_data):
+        print(k)
+    # print(
+    #     InstagramDataAnalyzer.get_word_distribution(path_to_data, "thesimpsons_457uupaoka")
+    # )
     # alpha = InstagramDataRetreiver.get_messages(path_to_data, "test")
     # print(alpha[0])
