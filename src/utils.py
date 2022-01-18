@@ -3,7 +3,7 @@ from typing import Dict
 def get_time_string(interval: int = 3) -> str:
     """
     Gets a time string in the format of "%Y-%m-%d ..."
-    :param interval: an integer between 0 and 3 inclusive that specifies what how detailed the time string will be
+    :param interval: an integer between 0 and 4 inclusive that specifies what how detailed the time string will be
     The following is the meaning for interval values:
     0 -> year
     1 -> month
@@ -52,6 +52,10 @@ def fix_username(username: str) -> str:
             # print(username, username[:i])
             return username[:i]
     return username
+
+
+def zero(): return 0
+
 
 if __name__ == '__main__':
     print(fix_username("emre.cenk99_oj23hl42"))

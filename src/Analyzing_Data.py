@@ -106,9 +106,8 @@ class InstagramDataAnalyzer():
 
         time_string = utils.get_time_string(interval)
 
-        def zero(): return 0
-        received = defaultdict(zero)
-        sent = defaultdict(zero)
+        received = defaultdict(utils.zero)
+        sent = defaultdict(utils.zero)
         for message, name in utils.loop_through_every_message(path):
             #the following could be a single line, but I think it's more readable this way
             message_date = message["timestamp_ms"]
@@ -128,7 +127,7 @@ class InstagramDataAnalyzer():
         counts number of active chats per day. Very similar structure to InstagramDataAnalyzer.count_active_chats_per_date
 
         :param path: path to root folder
-        :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one) : if 'name_of_owner' is left as an empty string, the first dictionary will contain messages sent by everyone, and the second message will be empty.
+        :interval: see utils.get_time_string for more info
         :return: {
         date1: {"name1", "name2"},
         date2: {"name3", "name4"}
@@ -148,20 +147,78 @@ class InstagramDataAnalyzer():
             # this function would add message["sender_name"] instead of convo_name
 
         return mapped
+
+    @staticmethod
+    def count_sent(path: str, time_specification: int = 2) -> (Dict[int, int], Dict[int, int]):
+        """
+        Counts the character length and number of messages for each day/month/year/hour
+        :param path: path to root folder
+        :param time_specification: Integer between 0 and 3 to specify what
+        0 -> most active year (2018, 2019 ... 2022)
+        1 -> most active month (jan, feb ..dec)
+        2 -> most active day of week (monday, tuesday ... sunday)
+        3 -> hour (1, 2, ... 24)
+        :return: A dictionary that maps days/months/years to messages sent
+        Note: Every entry in the dictionary is an integer. For instance, instead of monday, tuesday etc., the entries are 0, 1, 2 (where each integer corresponds to an index in the week).
+        """
+        if not(0 <= time_specification <= 3): raise ValueError(f"time_specification must be between 0 and 3. {time_specification} is not a valid value")
+
+        time_string = utils.get_time_string(4) # we need most detailed time string
+
+        #wrapper functions for attributes that can't be accessed via functions:
+        def get_year(date_object: datetime): return date_object.year
+        def get_month(date_object: datetime): return date_object.month
+        def get_hour(date_object: datetime): return date_object.hour
+
+        function_to_call = [
+            get_year,
+            get_month,
+            datetime.weekday,
+            get_hour,
+        ]
+        getter_function = function_to_call[time_specification]
+
+
+        lengths = defaultdict(utils.zero)
+        occurences = defaultdict(utils.zero)
+        for message, convo_name in utils.loop_through_every_message(path):
+            if "content" not in message: continue #no text
+
+            message_date = message["timestamp_ms"]
+            message_date = datetime.fromtimestamp(int(message_date / 1000))
+            message_date = parser.parse(message_date.strftime(time_string))
+            current_ = getter_function(message_date)
+            lengths[current_] += len(message["content"])
+            occurences[current_] += 1
+
+        return lengths, occurences
+
+
+    @staticmethod
+    def get_average_messages_sent_for_day_of_week(path: str) -> Dict[str, int]:
+        """
+        :param path: path to root
+        :return: Dictionary that maps days to average number of messages sent
+        Ex: {"monday": 123, "tuesday": 22, ... "sunday": 58}
+        """
+
     #todo: implement most active hours/days/months for messaging (pie chart or bar graph)
     #todo: find rankings between friends. Who did you exchange most chats with? Who sent you most messages? Who did you send most messages to? Who did you interact with most days? etc.
 
 
 
 if __name__ == '__main__':
-    from pprint import pprint
-    print = pprint
+    # from pprint import pprint
+    # print = pprint
     from dotenv import load_dotenv
     load_dotenv()
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    print(InstagramDataAnalyzer.count_number_of_active_dms(path_to_data))
+    print(
+        InstagramDataAnalyzer.count_sent(path_to_data)
+    )
+    # print(InstagramDataAnalyzer.count_number_of_active_dms(path_to_data))
     # for k in InstagramDataAnalyzer.count_active_chats_per_date(path_to_data, "Emre Cenk"):
     #     print(k)
     # print(
