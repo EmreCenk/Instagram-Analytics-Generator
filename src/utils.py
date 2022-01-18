@@ -44,13 +44,14 @@ def fix_username(username: str) -> str:
     :param username: username to fix
     :return: fixed version of the username
     """
-    if len(username) < 11:
-        for i in range(len(username) - 1, -1, -1):
-            if username[i] == "_":
-                # print(username, username[:i])
-                return username[:i]
-        return username
-    # print(username, username[:-11])
-    return username[:-11]
+    if len(username) >= 11:
+        # print(username, username[:-11])
+        return username[:-11]
+    for i in range(len(username) - 1, -1, -1):
+        if username[i] == "_":
+            # print(username, username[:i])
+            return username[:i]
+    return username
+
 if __name__ == '__main__':
     print(fix_username("emre.cenk99_oj23hl42"))
