@@ -35,3 +35,17 @@ def loop_through_every_message(path: str) -> (Dict, str):
     for conversation_name in chats:
         for message in InstagramDataRetreiver.get_messages(path, conversation_name):
             yield message, conversation_name
+
+def fix_username(username: str) -> str:
+    """
+    fixes instagram's username storage.
+    Instagram adds a sequence of random alphanumeric characters to the end of the username when downloading it for some reason.
+    This function fixes that.
+    :param username: username to fix
+    :return: fixed version of the username
+    """
+    for i in range(len(username) - 1, -1, -1):
+        if username[i] == "_": return username[:i]
+    return username
+if __name__ == '__main__':
+    print(fix_username("emre.cenk99_oj23hl42"))
