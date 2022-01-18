@@ -27,7 +27,7 @@ def get_time_string(interval: int = 3) -> str:
 
 def loop_through_every_message(path: str) -> Dict:
     """
-    counts number of active chats per day
+    Loops and yields every message that the user has sent and/or received
     :param path: path to root folder
     :return:
     """
