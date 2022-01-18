@@ -97,7 +97,9 @@ class InstagramDataAnalyzer():
         counts number of active chats per day
         :param path: path to root folder
         :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one)
-        todo: add functionality to infer who the owner is by finding the intersection of usernames from 2 dms.
+        Note: if 'name_of_owner' is left as an empty string, the first dictionary will contain messages sent by everyone,
+        and the second message will be empty.
+
 
         :return: (received messages per day, sent messages per day)
         2 dictionaries that map dates to how many active chats are on that day.
@@ -121,7 +123,7 @@ class InstagramDataAnalyzer():
                 if message["sender_name"] == name_of_owner: sent[message_date] += 1
                 else: received[message_date] += 1
 
-        if len(sent) == 0:
+        if len(sent) == 0 and name_of_owner != "":
             warn(f"\nIt appears {name_of_owner} has sent 0 messages in the entire history of your account. This is probably due to a mistake in the 'name_of_owner' variable specified.\nPlease make sure '{name_of_owner}' is the correct name.")
         return received, sent
 if __name__ == '__main__':
