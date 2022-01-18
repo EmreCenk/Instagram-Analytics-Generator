@@ -92,7 +92,7 @@ class InstagramDataAnalyzer():
         return counting
 
     @staticmethod
-    def count_active_chats_per_date(path: str, name_of_owner: str = "", interval: int = 2) -> (Dict[datetime.date, str], Dict[datetime.date, str]):
+    def count_number_of_messages_per_day(path: str, name_of_owner: str = "", interval: int = 2) -> (Dict[datetime.date, str], Dict[datetime.date, str]):
         """
         counts number of active chats per day
         :param path: path to root folder
@@ -109,7 +109,8 @@ class InstagramDataAnalyzer():
         def zero(): return 0
         received = defaultdict(zero)
         sent = defaultdict(zero)
-        for message in utils.loop_through_every_message(path):
+        for message, name in utils.loop_through_every_message(path):
+            #the following could be a single line, but I think it's more readable this way
             message_date = message["timestamp_ms"]
             message_date = datetime.fromtimestamp(int(message_date / 1000))
             message_date = parser.parse(message_date.strftime(time_string))
@@ -121,23 +122,69 @@ class InstagramDataAnalyzer():
             warn(f"\nIt appears {name_of_owner} has sent 0 messages in the entire history of your account. This is probably due to a mistake in the 'name_of_owner' variable specified.\nPlease make sure '{name_of_owner}' is the correct name.")
         return received, sent
 
+    @staticmethod
+    def count_number_of_active_dms(path: str, interval: int = 2) -> Dict[datetime.date, set]:
+        """
+        counts number of active chats per day. Very similar to InstagramDataAnalyzer.count_active_chats_per_date
 
+        :param path: path to root folder
+        :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one) : if 'name_of_owner' is left as an empty string, the first dictionary will contain messages sent by everyone, and the second message will be empty.
+        :return: {
+        date: {"name1", "name2"}
+        }
+
+        """
+        time_string = utils.get_time_string(interval)
+        mapped = defaultdict(set)
+        for message, convo_name in utils.loop_through_every_message(path):
+            #the following could be a single line, but I think it's more readable this way
+            message_date = message["timestamp_ms"]
+            message_date = datetime.fromtimestamp(int(message_date / 1000))
+            message_date = parser.parse(message_date.strftime(time_string))
+
+            mapped[message_date].add(convo_name)
+            # todo: implement function that counts "number of people exposed to"
+            # this function would add message["sender_name"] instead of convo_name
+
+        return mapped
     #todo: implement most active hours/days/months for messaging (pie chart or bar graph)
-    #todo: add analysis of active dms over time (lines)
-
+    #todo: find rankings between friends. Who did you exchange most chats with? Who sent you most messages? Who did you send most messages to? Who did you interact with most days? etc.
 
 
 
 if __name__ == '__main__':
+    from pprint import pprint
+    print = pprint
     from dotenv import load_dotenv
     load_dotenv()
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    for k in InstagramDataAnalyzer.count_active_chats_per_date(path_to_data, "Emre Cenk"):
-        print(k)
+    print(InstagramDataAnalyzer.count_number_of_active_dms(path_to_data))
+    # for k in InstagramDataAnalyzer.count_active_chats_per_date(path_to_data, "Emre Cenk"):
+    #     print(k)
     # print(
     #     InstagramDataAnalyzer.get_word_distribution(path_to_data, "thesimpsons_457uupaoka")
     # )
     # alpha = InstagramDataRetreiver.get_messages(path_to_data, "test")
     # print(alpha[0])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

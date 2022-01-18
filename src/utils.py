@@ -25,7 +25,7 @@ def get_time_string(interval: int = 3) -> str:
     return time_string
 
 
-def loop_through_every_message(path: str) -> Dict:
+def loop_through_every_message(path: str) -> (Dict, str):
     """
     Loops and yields every message that the user has sent and/or received
     :param path: path to root folder
@@ -34,4 +34,4 @@ def loop_through_every_message(path: str) -> Dict:
     chats = InstagramDataRetreiver.list_chats(path)
     for conversation_name in chats:
         for message in InstagramDataRetreiver.get_messages(path, conversation_name):
-            yield message
+            yield message, conversation_name

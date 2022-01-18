@@ -331,7 +331,7 @@ class InstagramDataVisualizer:
         :param plot_received: if true, the number of messages received is plotted.
         :return: None
         """
-        received, sent = InstagramDataAnalyzer.count_active_chats_per_date(path, name_of_owner, interval)
+        received, sent = InstagramDataAnalyzer.count_number_of_messages_per_day(path, name_of_owner, interval)
         sorted_received = sorted(received, key = lambda x: x)
         sorted_sent = sorted(sent, key = lambda x: x)
 
