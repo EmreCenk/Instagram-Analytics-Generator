@@ -317,64 +317,6 @@ class InstagramDataVisualizer:
                                                                plot_sent: bool = True,
                                                                plot_received: bool = True):
         """
-        Visualizes the number of messages sent and received per day over time.
-        :param path: path to root
-        :param name_of_owner: Instagram name of owner. The messages sent by this name will be plotted with a different name
-        :param interval: an integer between 0 and 3 inclusive that specifies what interval the messages will be plotted in.
-        See InstagramDataRetreiver.get_time_string for more information
-        interval values:
-        0 -> yearly intervals
-        1 -> monthly intervals
-        2 -> daily intervals
-        3 -> hourly interval
-        4 -> Minute intervals (may misrepresent data since a long message will create extreme spikes)
-        :param plot_sent: if true, the number of messages sent is plotted.
-        :param plot_received: if true, the number of messages received is plotted.
-        :return: None
-        """
-        from time import perf_counter
-        a = perf_counter()
-        received, sent = InstagramDataAnalyzer.count_active_chats_per_day(path, name_of_owner)
-        print("bottleneck:", perf_counter() - a)
-        a = perf_counter()
-
-        sorted_received = sorted(received, key = lambda x: x)
-        sorted_sent = sorted(sent, key = lambda x: x)
-
-        print(perf_counter() - a)
-        a = perf_counter()
-        xreceived, yreceived = [], []
-        xsent, ysent = [], []
-
-        if plot_received:
-            for day in sorted_received:
-                xreceived.append(day)
-                yreceived.append(received[day])
-
-        if plot_sent:
-            for day in sorted_sent:
-                xsent.append(day)
-                ysent.append(sent[day])
-
-
-        plt.plot(xsent, ysent, label=f"number of messages sent by {name_of_owner}")
-        plt.plot(xreceived, yreceived, label=f"number of messages received by {name_of_owner}")
-
-        plt.title(f"Number of Messages Received and Sent")
-        plt.xlabel(InstagramDataVisualizer.get_x_axis_label(interval))
-        plt.ylabel("number of messages")
-        plt.legend()
-        plt.grid()
-        print('bottleneck2', perf_counter() - a)
-        plt.show()
-
-    @staticmethod
-    def visualize_messages_sent_and_received_per_day_over_time_numpy(path: str,
-                                                               name_of_owner: str,
-                                                               interval: int = 1,
-                                                               plot_sent: bool = True,
-                                                               plot_received: bool = True):
-        """
         The
         Visualizes the number of messages sent and received per day over time.
         :param path: path to root
@@ -391,17 +333,10 @@ class InstagramDataVisualizer:
         :param plot_received: if true, the number of messages received is plotted.
         :return: None
         """
-        from time import perf_counter
-        a = perf_counter()
         received, sent = InstagramDataAnalyzer.count_active_chats_per_day(path, name_of_owner)
-        print("bottleneck:", perf_counter() - a)
-        a = perf_counter()
-
         sorted_received = sorted(received, key = lambda x: x)
         sorted_sent = sorted(sent, key = lambda x: x)
 
-        print(perf_counter() - a)
-        a = perf_counter()
         yreceived = np.zeros((len(received), 1))
         ysent = np.zeros((len(sent), 1))
 
@@ -422,7 +357,6 @@ class InstagramDataVisualizer:
         plt.ylabel("number of messages")
         plt.legend()
         plt.grid()
-        print('bottleneck2', perf_counter() - a)
         plt.show()
 if __name__ == '__main__':
     import os
