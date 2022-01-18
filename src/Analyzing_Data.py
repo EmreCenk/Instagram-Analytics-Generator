@@ -92,7 +92,7 @@ class InstagramDataAnalyzer():
         return counting
 
     @staticmethod
-    def count_active_chats_per_day(path: str, name_of_owner: str = "", interval: int = 2) -> (Dict[datetime.date, str], Dict[datetime.date, str]):
+    def count_active_chats_per_date(path: str, name_of_owner: str = "", interval: int = 2) -> (Dict[datetime.date, str], Dict[datetime.date, str]):
         """
         counts number of active chats per day
         :param path: path to root folder
@@ -104,32 +104,37 @@ class InstagramDataAnalyzer():
         """
 
 
-        chats = InstagramDataRetreiver.list_chats(path)
         time_string = utils.get_time_string(interval)
 
         def zero(): return 0
         received = defaultdict(zero)
         sent = defaultdict(zero)
-        for conversation_name in chats:
-            convo = InstagramDataRetreiver.get_messages(path, conversation_name)
-            for message in convo:
-                message_date = message["timestamp_ms"]
-                message_date = datetime.fromtimestamp(int(message_date / 1000))
-                message_date = parser.parse(message_date.strftime(time_string))
+        for message in utils.loop_through_every_message(path):
+            message_date = message["timestamp_ms"]
+            message_date = datetime.fromtimestamp(int(message_date / 1000))
+            message_date = parser.parse(message_date.strftime(time_string))
 
-                if message["sender_name"] == name_of_owner: sent[message_date] += 1
-                else: received[message_date] += 1
+            if message["sender_name"] == name_of_owner: sent[message_date] += 1
+            else: received[message_date] += 1
 
         if len(sent) == 0 and name_of_owner != "":
             warn(f"\nIt appears {name_of_owner} has sent 0 messages in the entire history of your account. This is probably due to a mistake in the 'name_of_owner' variable specified.\nPlease make sure '{name_of_owner}' is the correct name.")
         return received, sent
+
+
+    #todo: implement most active hours/days/months for messaging (pie chart or bar graph)
+    #todo: add analysis of active dms over time (lines)
+
+
+
+
 if __name__ == '__main__':
     from dotenv import load_dotenv
     load_dotenv()
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    for k in InstagramDataAnalyzer.count_active_chats_per_day(path_to_data, "Emre Cenk"):
+    for k in InstagramDataAnalyzer.count_active_chats_per_date(path_to_data, "Emre Cenk"):
         print(k)
     # print(
     #     InstagramDataAnalyzer.get_word_distribution(path_to_data, "thesimpsons_457uupaoka")

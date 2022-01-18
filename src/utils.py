@@ -1,4 +1,5 @@
-
+from src.Retreiving_Data import InstagramDataRetreiver
+from typing import Dict
 def get_time_string(interval: int = 3) -> str:
     """
     Gets a time string in the format of "%Y-%m-%d ..."
@@ -22,3 +23,15 @@ def get_time_string(interval: int = 3) -> str:
     time_string = time_string[:-1]
     if interval == 4: time_string += ":%M"
     return time_string
+
+
+def loop_through_every_message(path: str) -> Dict:
+    """
+    counts number of active chats per day
+    :param path: path to root folder
+    :return:
+    """
+    chats = InstagramDataRetreiver.list_chats(path)
+    for conversation_name in chats:
+        for message in InstagramDataRetreiver.get_messages(path, conversation_name):
+            yield message

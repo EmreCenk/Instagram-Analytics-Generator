@@ -287,9 +287,7 @@ class InstagramDataVisualizer:
                 current_followers = ""
 
                 for person in categorized_by_date[dates[i]]:
-                    # print(person)
                     date_followed = datetime.fromtimestamp(person['string_list_data'][0]['timestamp'])
-                    cache = parser.parse(date_followed.strftime("%m/%d/%Y, %H:%M:%S"))
 
                     current_followers += f"{person['string_list_data'][0]['value']}\t\t\t\t[{date_followed}]\n"
                 popup_title = f"{current_follower_num} follower"
@@ -333,7 +331,7 @@ class InstagramDataVisualizer:
         :param plot_received: if true, the number of messages received is plotted.
         :return: None
         """
-        received, sent = InstagramDataAnalyzer.count_active_chats_per_day(path, name_of_owner, interval)
+        received, sent = InstagramDataAnalyzer.count_active_chats_per_date(path, name_of_owner, interval)
         sorted_received = sorted(received, key = lambda x: x)
         sorted_sent = sorted(sent, key = lambda x: x)
 
@@ -372,6 +370,6 @@ if __name__ == '__main__':
     #                                                           interval = 2)
     InstagramDataVisualizer.visualize_messages_sent_and_received_over_time(path_to_data,
                                                                                    "Emre Cenk",
-                                                                                   interval = 0,
+                                                                                   interval = 1,
                                                                                    )
 
