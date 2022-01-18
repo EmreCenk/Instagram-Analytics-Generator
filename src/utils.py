@@ -39,13 +39,18 @@ def loop_through_every_message(path: str) -> (Dict, str):
 def fix_username(username: str) -> str:
     """
     fixes instagram's username storage.
-    Instagram adds a sequence of random alphanumeric characters to the end of the username when downloading it for some reason.
-    This function fixes that.
+    Instagram add a "_" and 10 random alphanumeric characters to the end of the username for certain statistics
+    This function compensates for those 11 characters.
     :param username: username to fix
     :return: fixed version of the username
     """
-    for i in range(len(username) - 1, -1, -1):
-        if username[i] == "_": return username[:i]
-    return username
+    if len(username) < 11:
+        for i in range(len(username) - 1, -1, -1):
+            if username[i] == "_":
+                # print(username, username[:i])
+                return username[:i]
+        return username
+    # print(username, username[:-11])
+    return username[:-11]
 if __name__ == '__main__':
     print(fix_username("emre.cenk99_oj23hl42"))

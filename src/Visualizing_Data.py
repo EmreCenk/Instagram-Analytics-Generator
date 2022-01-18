@@ -454,8 +454,8 @@ if __name__ == '__main__':
     #                                                                                "Emre Cenk",
     #                                                                                interval = 1,
     #                                                                                )
-    # InstagramDataVisualizer.visualize_active_chats(path_to_data,
-    #                                                interval = 0)
+    InstagramDataVisualizer.visualize_active_chats(path_to_data,
+                                                   interval = 0)
 
     # InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data,
     #                                                interval = 0)
