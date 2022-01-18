@@ -311,7 +311,7 @@ class InstagramDataVisualizer:
         plt.show()
 
     @staticmethod
-    def visualize_messages_sent_and_received_per_day_over_time(path: str,
+    def visualize_messages_sent_and_received_over_time(path: str,
                                                                name_of_owner: str,
                                                                interval: int = 1,
                                                                plot_sent: bool = True,
@@ -333,7 +333,7 @@ class InstagramDataVisualizer:
         :param plot_received: if true, the number of messages received is plotted.
         :return: None
         """
-        received, sent = InstagramDataAnalyzer.count_active_chats_per_day(path, name_of_owner)
+        received, sent = InstagramDataAnalyzer.count_active_chats_per_day(path, name_of_owner, interval)
         sorted_received = sorted(received, key = lambda x: x)
         sorted_sent = sorted(sent, key = lambda x: x)
 
@@ -370,13 +370,8 @@ if __name__ == '__main__':
     # InstagramDataVisualizer.visualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
     # InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data,
     #                                                           interval = 2)
-    InstagramDataVisualizer.visualize_messages_sent_and_received_per_day_over_time(path_to_data,
+    InstagramDataVisualizer.visualize_messages_sent_and_received_over_time(path_to_data,
                                                                                    "Emre Cenk",
-                                                                                   interval = 3,
+                                                                                   interval = 0,
                                                                                    )
 
-    print()
-    InstagramDataVisualizer.visualize_messages_sent_and_received_per_day_over_time_numpy(path_to_data,
-                                                                                   "Emre Cenk",
-                                                                                   interval = 3,
-                                                                                   )

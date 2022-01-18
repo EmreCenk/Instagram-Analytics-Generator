@@ -92,7 +92,7 @@ class InstagramDataAnalyzer():
         return counting
 
     @staticmethod
-    def count_active_chats_per_day(path: str, name_of_owner: str = "") -> (Dict[datetime.date, str], Dict[datetime.date, str]):
+    def count_active_chats_per_day(path: str, name_of_owner: str = "", interval: int = 2) -> (Dict[datetime.date, str], Dict[datetime.date, str]):
         """
         counts number of active chats per day
         :param path: path to root folder
@@ -105,7 +105,7 @@ class InstagramDataAnalyzer():
 
 
         chats = InstagramDataRetreiver.list_chats(path)
-        time_string = utils.get_time_string(interval=2)
+        time_string = utils.get_time_string(interval)
 
         def zero(): return 0
         received = defaultdict(zero)
