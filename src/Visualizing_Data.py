@@ -276,7 +276,6 @@ class InstagramDataVisualizer:
 
 
         def on_pick(event):
-            global time_string
             line = event.artist
             xdata, ydata = line.get_data()
             ind = event.ind
@@ -293,7 +292,7 @@ class InstagramDataVisualizer:
                     current_followers += f"{person['string_list_data'][0]['value']}\t\t\t\t[{date_followed}]\n"
                 popup_title = f"{current_follower_num} follower"
                 if current_follower_num > 1: popup_title += "s"
-                popup_title += f" gained on\n{dates[i].strftime(time_string)}:"
+                popup_title += f" gained in the {['year', 'month', 'day', 'hour', 'minute'][interval]} of {dates[i].strftime(time_string)}:"
                 create_popup_message(
                     message = current_followers,
                     title_in_popup = popup_title,
@@ -302,7 +301,7 @@ class InstagramDataVisualizer:
 
         fig.canvas.mpl_connect('pick_event', on_pick)
 
-        plt.title(f"Followers gained")
+        plt.title(f"Followers Gained Over Time")
         plt.xlabel(InstagramDataVisualizer.get_x_axis_label(interval))
         plt.ylabel("follower number")
         plt.legend()
@@ -418,12 +417,12 @@ class InstagramDataVisualizer:
 
                 popup_title = f"{current_follower_num} chat"
                 if current_follower_num > 1: popup_title += "s"
-                popup_title += f" Active in the following {['year', 'month', 'day', 'hour', 'minute'][interval]}:\n{dates[i].strftime(time_string)}:"
+                popup_title += f" Active in the {['year', 'month', 'day', 'hour', 'minute'][interval]} of {dates[i].strftime(time_string)}:"
 
                 create_popup_message(
                     message = current_followers,
                     title_in_popup = popup_title,
-                    window_title = f"Chats That Were Active in the following {['year', 'month', 'day', 'hour', 'minute'][interval]} {dates[i].strftime(time_string)}")
+                    window_title = f"Chats That Were Active in the {['year', 'month', 'day', 'hour', 'minute'][interval]} of {dates[i].strftime(time_string)}")
                 break #todo: implement threads to create multiple windows when data points coincide
 
         fig.canvas.mpl_connect('pick_event', on_pick)
@@ -455,5 +454,5 @@ if __name__ == '__main__':
     #                                                                                "Emre Cenk",
     #                                                                                interval = 1,
     #                                                                                )
-    InstagramDataVisualizer.visualize_active_chats(path_to_data,
+    InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data,
                                                    interval = 0)
