@@ -330,10 +330,17 @@ class InstagramDataVisualizer:
         :param plot_received: if true, the number of messages received is plotted.
         :return: None
         """
+        from time import perf_counter
+        a = perf_counter()
         received, sent = InstagramDataAnalyzer.count_active_chats_per_day(path, name_of_owner)
+        print("bottleneck:", perf_counter() - a)
+        a = perf_counter()
+
         sorted_received = sorted(received, key = lambda x: x)
         sorted_sent = sorted(sent, key = lambda x: x)
 
+        print(perf_counter() - a)
+        a = perf_counter()
         xreceived, yreceived = [], []
         xsent, ysent = [], []
 
@@ -357,6 +364,7 @@ class InstagramDataVisualizer:
         plt.legend()
         plt.grid()
         plt.show()
+        print('bottleneck2', perf_counter() - a)
 
 
 if __name__ == '__main__':
@@ -374,4 +382,4 @@ if __name__ == '__main__':
     InstagramDataVisualizer.visualize_messages_sent_and_received_per_day_over_time(path_to_data,
                                                                                    "Emre Cenk",
                                                                                    interval = 3,
-                                                                                   plot_sent=False,)
+                                                                                   )

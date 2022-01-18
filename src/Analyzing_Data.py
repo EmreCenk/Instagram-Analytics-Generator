@@ -102,6 +102,8 @@ class InstagramDataAnalyzer():
         The first dictionary -> how many messages were received on each date
         Second Dictionary -> how many messages 'name_of_owner' sent on each date
         """
+        from time import perf_counter
+
 
         chats = InstagramDataRetreiver.list_chats(path)
         time_string = utils.get_time_string(interval=2)
