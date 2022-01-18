@@ -162,7 +162,6 @@ class InstagramDataAnalyzer():
         2 -> most active day of week (monday, tuesday ... sunday)
         3 -> hour (1, 2, ... 24)
         :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one) : if 'name_of_owner' is left as an empty string, the first dictionary will contain messages sent by everyone, and the second message will be empty.
-        :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one) : if 'name_of_owner' is left as an empty string, the first dictionary will contain messages sent by everyone, and the second message will be empty.
 
         :return: A dictionary that maps days/months/years to messages sent
         Note: Every entry in the dictionary is an integer. For instance, instead of monday, tuesday etc., the entries are 0, 1, 2 (where each integer corresponds to an index in the week).
@@ -208,29 +207,61 @@ class InstagramDataAnalyzer():
 
 
     @staticmethod
-    def get_average_messages_sent_for_day_of_week(path: str) -> Dict[str, int]:
+    def most_active_days_of_week(path: str, name_of_owner: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
         """
         :param path: path to root
-        :return: Dictionary that maps days to average number of messages sent
-        Ex: {"monday": 123, "tuesday": 22, ... "sunday": 58}
+        :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one) : if 'name_of_owner' is left as an empty string, the first dictionary will contain messages sent by everyone, and the second message will be empty.
+        :return: 4 dicts that maps days to integers
+        dict1 -> how many characters in total were SENT on each day
+        dict2 -> number of SENT messages on each day
+        dict3 -> how many characters in total were RECEIVED on each day
+        dict4 -> number of RECEIVED messages on each day
+        Ex: (
+            {0: 123, 1: 22, ... 6: 58},
+            {0: 123, 1: 22, ... 6: 58},
+            {0: 123, 1: 22, ... 6: 58},
+            {0: 123, 1: 22, ... 6: 58},
+            )
         """
+        return InstagramDataAnalyzer.count_msgs(path, 2, name_of_owner=name_of_owner)
 
+    @staticmethod
+    def most_active_months(path: str, name_of_owner: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
+        """
+        Everything is the same as InstagramDataAnalyzer.most_active_day_of_week except this function checks most active months of the year
+        """
+        return InstagramDataAnalyzer.count_msgs(path, 1, name_of_owner=name_of_owner)
+
+    @staticmethod
+    def most_active_years(path: str, name_of_owner: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
+        """
+        Everything is the same as InstagramDataAnalyzer.most_active_day_of_week except this function checks most active years
+        """
+        return InstagramDataAnalyzer.count_msgs(path, 0, name_of_owner=name_of_owner)
+
+    @staticmethod
+    def most_active_hours(path: str, name_of_owner: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
+        """
+        Everything is the same as InstagramDataAnalyzer.most_active_day_of_week except this function checks most active hours of the day
+        """
+        return InstagramDataAnalyzer.count_msgs(path, 3, name_of_owner=name_of_owner)
     #todo: implement most active hours/days/months for messaging (pie chart or bar graph)
     #todo: find rankings between friends. Who did you exchange most chats with? Who sent you most messages? Who did you send most messages to? Who did you interact with most days? etc.
 
 
 
 if __name__ == '__main__':
-    # from pprint import pprint
-    # print = pprint
     from dotenv import load_dotenv
     load_dotenv()
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    print(
-        InstagramDataAnalyzer.count_sent(path_to_data)
-    )
+    w = InstagramDataAnalyzer.count_msgs(path_to_data, name_of_owner="Emre Cenk")
+
+    from pprint import pprint
+    print = pprint
+    print(w)
+
     # print(InstagramDataAnalyzer.count_number_of_active_dms(path_to_data))
     # for k in InstagramDataAnalyzer.count_active_chats_per_date(path_to_data, "Emre Cenk"):
     #     print(k)
