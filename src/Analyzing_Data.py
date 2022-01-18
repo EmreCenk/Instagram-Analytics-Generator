@@ -149,15 +149,21 @@ class InstagramDataAnalyzer():
         return mapped
 
     @staticmethod
-    def count_sent(path: str, time_specification: int = 2) -> (Dict[int, int], Dict[int, int]):
+    def count_msgs(path: str,
+                   time_specification: int = 2,
+                   name_of_owner: str = "") -> (Dict[int, int], Dict[int, int], (Dict[int, int], Dict[int, int])):
         """
+        Note: this function should not be directly called unless absolutely necessary. If you're trying to find a statistic, chances are there is a wrapper function for it.
         Counts the character length and number of messages for each day/month/year/hour
         :param path: path to root folder
-        :param time_specification: Integer between 0 and 3 to specify what
+        :param time_specification: Integer between 0 and 3 to specify what cycle to count
         0 -> most active year (2018, 2019 ... 2022)
         1 -> most active month (jan, feb ..dec)
         2 -> most active day of week (monday, tuesday ... sunday)
         3 -> hour (1, 2, ... 24)
+        :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one) : if 'name_of_owner' is left as an empty string, the first dictionary will contain messages sent by everyone, and the second message will be empty.
+        :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one) : if 'name_of_owner' is left as an empty string, the first dictionary will contain messages sent by everyone, and the second message will be empty.
+
         :return: A dictionary that maps days/months/years to messages sent
         Note: Every entry in the dictionary is an integer. For instance, instead of monday, tuesday etc., the entries are 0, 1, 2 (where each integer corresponds to an index in the week).
         """
@@ -179,8 +185,11 @@ class InstagramDataAnalyzer():
         getter_function = function_to_call[time_specification]
 
 
-        lengths = defaultdict(utils.zero)
-        occurences = defaultdict(utils.zero)
+        sent_lengths = defaultdict(utils.zero)
+        number_of_sent_messages = defaultdict(utils.zero)
+
+        received_lengths = defaultdict(utils.zero)
+        number_of_received_messages = defaultdict(utils.zero)
         for message, convo_name in utils.loop_through_every_message(path):
             if "content" not in message: continue #no text
 
@@ -188,10 +197,14 @@ class InstagramDataAnalyzer():
             message_date = datetime.fromtimestamp(int(message_date / 1000))
             message_date = parser.parse(message_date.strftime(time_string))
             current_ = getter_function(message_date)
-            lengths[current_] += len(message["content"])
-            occurences[current_] += 1
 
-        return lengths, occurences
+            if message["sender_name"] == name_of_owner:
+                sent_lengths[current_] += len(message["content"])
+                number_of_sent_messages[current_] += 1
+            else:
+                received_lengths[current_] += len(message["content"])
+                number_of_received_messages[current_] += 1
+        return sent_lengths, number_of_sent_messages, received_lengths, number_of_received_messages
 
 
     @staticmethod
