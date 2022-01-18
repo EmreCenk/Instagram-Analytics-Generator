@@ -276,6 +276,7 @@ class InstagramDataVisualizer:
 
 
         def on_pick(event):
+            global time_string
             line = event.artist
             xdata, ydata = line.get_data()
             ind = event.ind
@@ -292,7 +293,7 @@ class InstagramDataVisualizer:
                     current_followers += f"{person['string_list_data'][0]['value']}\t\t\t\t[{date_followed}]\n"
                 popup_title = f"{current_follower_num} follower"
                 if current_follower_num > 1: popup_title += "s"
-                popup_title += f" gained on\n{dates[i]}:"
+                popup_title += f" gained on\n{dates[i].strftime(time_string)}:"
                 create_popup_message(
                     message = current_followers,
                     title_in_popup = popup_title,
@@ -378,7 +379,8 @@ class InstagramDataVisualizer:
         4 -> Minute intervals (may misrepresent data since a long message will create extreme spikes)
         :return: None
         """
-        categorized_by_date = InstagramDataAnalyzer.count_number_of_active_dms(path)
+        time_string = utils.get_time_string(interval) #required to properly put titles in the annotations
+        categorized_by_date = InstagramDataAnalyzer.count_number_of_active_dms(path, interval)
         sorted_dates = sorted(categorized_by_date)
 
 
@@ -411,16 +413,17 @@ class InstagramDataVisualizer:
             for i in range(len(how_many)):
                 current_follower_num = how_many[i]
                 current_followers = ""
-                for person in categorized_by_date[dates[i]]: current_followers += f"{person}\n"
+                for person in categorized_by_date[dates[i]]:
+                    current_followers += f"{person}\n"
 
                 popup_title = f"{current_follower_num} chat"
                 if current_follower_num > 1: popup_title += "s"
-                popup_title += f" active on\n{dates[i]}:"
+                popup_title += f" Active in the following {['year', 'month', 'day', 'hour', 'minute'][interval]}:\n{dates[i].strftime(time_string)}:"
 
                 create_popup_message(
                     message = current_followers,
                     title_in_popup = popup_title,
-                    window_title = f"Chats That Were Active on {dates[i]}")
+                    window_title = f"Chats That Were Active in the following {['year', 'month', 'day', 'hour', 'minute'][interval]} {dates[i].strftime(time_string)}")
                 break #todo: implement threads to create multiple windows when data points coincide
 
         fig.canvas.mpl_connect('pick_event', on_pick)
@@ -453,4 +456,4 @@ if __name__ == '__main__':
     #                                                                                interval = 1,
     #                                                                                )
     InstagramDataVisualizer.visualize_active_chats(path_to_data,
-                                                   interval = 2)
+                                                   interval = 0)
