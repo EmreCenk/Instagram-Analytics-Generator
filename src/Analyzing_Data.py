@@ -205,6 +205,20 @@ class InstagramDataAnalyzer():
                 number_of_received_messages[current_] += 1
         return sent_lengths, number_of_sent_messages, received_lengths, number_of_received_messages
 
+    @staticmethod
+    def most_active_years(path: str, name_of_owner: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
+        """
+        Everything is the same as InstagramDataAnalyzer.most_active_day_of_week except this function checks most active years
+        """
+        return InstagramDataAnalyzer.count_msgs(path, 0, name_of_owner=name_of_owner)
+
+    @staticmethod
+    def most_active_months(path: str, name_of_owner: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
+        """
+        Everything is the same as InstagramDataAnalyzer.most_active_day_of_week except this function checks most active months of the year
+        """
+        return InstagramDataAnalyzer.count_msgs(path, 1, name_of_owner=name_of_owner)
+
 
     @staticmethod
     def most_active_days_of_week(path: str, name_of_owner: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
@@ -225,19 +239,7 @@ class InstagramDataAnalyzer():
         """
         return InstagramDataAnalyzer.count_msgs(path, 2, name_of_owner=name_of_owner)
 
-    @staticmethod
-    def most_active_months(path: str, name_of_owner: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
-        """
-        Everything is the same as InstagramDataAnalyzer.most_active_day_of_week except this function checks most active months of the year
-        """
-        return InstagramDataAnalyzer.count_msgs(path, 1, name_of_owner=name_of_owner)
 
-    @staticmethod
-    def most_active_years(path: str, name_of_owner: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
-        """
-        Everything is the same as InstagramDataAnalyzer.most_active_day_of_week except this function checks most active years
-        """
-        return InstagramDataAnalyzer.count_msgs(path, 0, name_of_owner=name_of_owner)
 
     @staticmethod
     def most_active_hours(path: str, name_of_owner: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
