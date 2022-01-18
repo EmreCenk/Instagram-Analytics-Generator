@@ -413,7 +413,7 @@ class InstagramDataVisualizer:
                 current_follower_num = how_many[i]
                 current_followers = ""
                 for person in categorized_by_date[dates[i]]:
-                    current_followers += f"{person}\n"
+                    current_followers += f"{utils.fix_username(person)}\n"
 
                 popup_title = f"{current_follower_num} chat"
                 if current_follower_num > 1: popup_title += "s"
@@ -454,5 +454,8 @@ if __name__ == '__main__':
     #                                                                                "Emre Cenk",
     #                                                                                interval = 1,
     #                                                                                )
-    InstagramDataVisualizer.visualize_active_chats(path_to_data,
-                                                   interval = 0)
+    # InstagramDataVisualizer.visualize_active_chats(path_to_data,
+    #                                                interval = 0)
+
+    # InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data,
+    #                                                interval = 0)
