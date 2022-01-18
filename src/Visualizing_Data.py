@@ -417,7 +417,7 @@ class InstagramDataVisualizer:
 
                 popup_title = f"{current_follower_num} chat"
                 if current_follower_num > 1: popup_title += "s"
-                popup_title += f" Active in the {['year', 'month', 'day', 'hour', 'minute'][interval]} of {dates[i].strftime(time_string)}:"
+                popup_title += f" active in the {['year', 'month', 'day', 'hour', 'minute'][interval]} of {dates[i].strftime(time_string)}:"
 
                 create_popup_message(
                     message = current_followers,
@@ -455,7 +455,7 @@ if __name__ == '__main__':
     #                                                                                interval = 1,
     #                                                                                )
     InstagramDataVisualizer.visualize_active_chats(path_to_data,
-                                                   interval = 0)
+                                                   interval = 1)
 
     # InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data,
     #                                                interval = 0)
