@@ -125,12 +125,13 @@ class InstagramDataAnalyzer():
     @staticmethod
     def count_number_of_active_dms(path: str, interval: int = 2) -> Dict[datetime.date, set]:
         """
-        counts number of active chats per day. Very similar to InstagramDataAnalyzer.count_active_chats_per_date
+        counts number of active chats per day. Very similar structure to InstagramDataAnalyzer.count_active_chats_per_date
 
         :param path: path to root folder
         :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one) : if 'name_of_owner' is left as an empty string, the first dictionary will contain messages sent by everyone, and the second message will be empty.
         :return: {
-        date: {"name1", "name2"}
+        date1: {"name1", "name2"},
+        date2: {"name3", "name4"}
         }
 
         """

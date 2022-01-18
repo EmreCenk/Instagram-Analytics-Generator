@@ -356,6 +356,86 @@ class InstagramDataVisualizer:
         plt.legend()
         plt.grid()
         plt.show()
+
+    @staticmethod
+    def visualize_active_chats(path: str,
+                               interval: int = 1
+                               ):
+
+        """
+        Visualizes the number of active chats over time
+        Very similar structure to InstagramDataVisualizer.visualize_follower_gain_over_time
+        todo: check if it's worth generalizing/refactoring InstagramDataVisualizer.visualize_follower_gain_over_time and InstagramDataVisualizer.visualize_active_chats into a single function.
+
+        :param path: path to root
+        :param interval: an integer between 0 and 3 inclusive that specifies what interval the messages will be plotted in.
+        See InstagramDataRetreiver.get_time_string for more information
+        interval values:
+        0 -> yearly intervals
+        1 -> monthly intervals
+        2 -> daily intervals
+        3 -> hourly interval
+        4 -> Minute intervals (may misrepresent data since a long message will create extreme spikes)
+        :return: None
+        """
+        categorized_by_date = InstagramDataAnalyzer.count_number_of_active_dms(path)
+        sorted_dates = sorted(categorized_by_date)
+
+
+        #plotting data:
+        xs, ys = [], []
+        names = []
+        fig, ax = plt.subplots()
+
+        for date in sorted_dates:
+            xs.append(date)
+            ys.append(len(categorized_by_date[date]))
+            names.append("")
+            for person in categorized_by_date[date]:
+                names[-1] += person + "\n"
+
+        ax.plot_date(xs, ys, picker=5)
+        plt.plot(xs, ys)
+
+
+
+        # the following is taken from InstagramDataVisualizer.visualize_follower_gain_over_time
+        # (with a few adjustments)
+        def on_pick(event):
+            line = event.artist
+            xdata, ydata = line.get_data()
+            ind = event.ind
+            how_many = ydata[ind]
+            dates = xdata[ind]
+
+            for i in range(len(how_many)):
+                current_follower_num = how_many[i]
+                current_followers = ""
+                for person in categorized_by_date[dates[i]]: current_followers += f"{person}\n"
+
+                popup_title = f"{current_follower_num} chat"
+                if current_follower_num > 1: popup_title += "s"
+                popup_title += f" active on\n{dates[i]}:"
+
+                create_popup_message(
+                    message = current_followers,
+                    title_in_popup = popup_title,
+                    window_title = f"Chats That Were Active on {dates[i]}")
+                break #todo: implement threads to create multiple windows when data points coincide
+
+        fig.canvas.mpl_connect('pick_event', on_pick)
+
+        plt.title(f"Active Chats Over Time")
+        plt.xlabel(InstagramDataVisualizer.get_x_axis_label(interval))
+        plt.ylabel("number of active chats")
+        plt.legend()
+        plt.grid()
+        plt.show()
+
+
+
+
+
 if __name__ == '__main__':
     import os
     from dotenv import load_dotenv
@@ -368,8 +448,9 @@ if __name__ == '__main__':
     # InstagramDataVisualizer.visualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
     # InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data,
     #                                                           interval = 2)
-    InstagramDataVisualizer.visualize_messages_sent_and_received_over_time(path_to_data,
-                                                                                   "Emre Cenk",
-                                                                                   interval = 1,
-                                                                                   )
-
+    # InstagramDataVisualizer.visualize_messages_sent_and_received_over_time(path_to_data,
+    #                                                                                "Emre Cenk",
+    #                                                                                interval = 1,
+    #                                                                                )
+    InstagramDataVisualizer.visualize_active_chats(path_to_data,
+                                                   interval = 2)
