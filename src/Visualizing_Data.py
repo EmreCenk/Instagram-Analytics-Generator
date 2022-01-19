@@ -434,10 +434,30 @@ class InstagramDataVisualizer:
         plt.grid()
         plt.show()
 
+    @staticmethod
+    def visualize_most_active_day(path: str, name_of_owner: str  ):
+        """
+        :param path: path to root
+        :return:
+        """
+        data = InstagramDataAnalyzer.most_active_days_of_week(path, name_of_owner)
+        days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        index = 0 #0, 1, 3, 4 depending on which one you wanna visualize
 
+        total = 0
+        for d in data[index]:
+            total += data[index][d]
 
-
-
+        labels, sizes = [], []
+        for d in data[index]:
+            labels.append(days[d])
+            sizes.append(data[index][d]/total )
+        fig1, ax1 = plt.subplots()
+        ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
+                shadow=False)
+        ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        plt.title("Days")
+        plt.show()
 if __name__ == '__main__':
     import os
     from dotenv import load_dotenv
@@ -445,6 +465,8 @@ if __name__ == '__main__':
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
+
+    InstagramDataVisualizer.visualize_most_active_day(path_to_data, "Emre Cenk")
     # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
     # InstagramDataVisualizer.visualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
@@ -454,8 +476,8 @@ if __name__ == '__main__':
     #                                                                                "Emre Cenk",
     #                                                                                interval = 1,
     #                                                                                )
-    InstagramDataVisualizer.visualize_active_chats(path_to_data,
-                                                   interval = 1)
+    # InstagramDataVisualizer.visualize_active_chats(path_to_data,
+    #                                                interval = 1)
 
     # InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data,
     #                                                interval = 0)
