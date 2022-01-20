@@ -476,22 +476,30 @@ class InstagramDataVisualizer:
 
 
         fig1, ax1 = plt.subplots(2, 2)
+
         location = ((0,0), (0,1), (1,0), (1,1))
         data = data_func(path, name_of_owner)
         for index in range(4):
-
             labels, sizes = [], []
             for d in sorted(data[index]):
                 if interval in {0, 3}: labels.append(d) #either a year or a ready string
                 else: labels.append(days[d])
                 sizes.append(data[index][d])
+
+
             if graph_type == 0:
                 ax1[location[index][0],location[index][1]].pie(sizes, labels=labels, autopct='%1.1f%%',
                         shadow=False)
                 ax1[location[index][0],location[index][1]].axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
             else:
-                ax1[location[index][0],location[index][1]].bar(labels, sizes)
+                # print(labels, sizes)
+                # print()
+                # print(titles[index])
+                ax1[location[index][0], location[index][1]].bar(labels, sizes)
+                ax1[location[index][0], location[index][1]].ticklabel_format(style='plain')
+                ax1[location[index][0], location[index][1]].ticklabel_format(useOffset=False)
+
 
             ax1[location[index][0],location[index][1]].set_title(titles[index])
             ax1[location[index][0],location[index][1]].set_xlabel(xlabels[index])
