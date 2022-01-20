@@ -5,7 +5,7 @@ from src.popups import create_popup_message
 import matplotlib.pyplot as plt
 from datetime import datetime
 from dateutil import parser
-from typing import Dict
+from typing import Dict, List
 from src.Retreiving_Data import InstagramDataRetreiver
 from collections import defaultdict
 from src import utils
@@ -435,29 +435,90 @@ class InstagramDataVisualizer:
         plt.show()
 
     @staticmethod
-    def visualize_most_active_day(path: str, name_of_owner: str  ):
+    def visualize_most_active_day(path: str,
+                                  titles: List[str],
+                                  xlabels: List[str],
+                                  ylabels: List[str],
+                                  name_of_owner: str = "",
+                                  method: int = 0,
+                                  ):
+
         """
         :param path: path to root
+        :param index: 0, 1, 2, 3 depending on which one you wanna visualize. See InstagramDataAnalyzer.most_active_days_of_week to see which integer corresponds to which visualization
+        :param name_of_owner: instagram name of user
+        :param method: which type of graph you want.
+        0 -> pie chart
+        any other number -> bar graph
         :return:
         """
+
+        fig1, ax1 = plt.subplots(2, 2)
+        location = ((0,0), (0,1), (1,0), (1,1))
         data = InstagramDataAnalyzer.most_active_days_of_week(path, name_of_owner)
         days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-        index = 0 #0, 1, 3, 4 depending on which one you wanna visualize
 
-        total = 0
-        for d in data[index]:
-            total += data[index][d]
+        for index in range(4):
 
-        labels, sizes = [], []
-        for d in data[index]:
-            labels.append(days[d])
-            sizes.append(data[index][d]/total )
-        fig1, ax1 = plt.subplots()
-        ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
-                shadow=False)
-        ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-        plt.title("Days")
+            total = 0
+            for d in data[index]:
+                total += data[index][d]
+
+            labels, sizes = [], []
+            for d in range(7):
+                labels.append(days[d])
+                sizes.append(data[index][d]/total)
+            if method == 0:
+                ax1[location[index][0],location[index][1]].pie(sizes, labels=labels, autopct='%1.1f%%',
+                        shadow=False)
+                ax1[location[index][0],location[index][1]].axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+            else:
+                ax1[location[index][0],location[index][1]].bar(labels, sizes)
+
+            ax1[location[index][0],location[index][1]].set_title(titles[index])
+            ax1[location[index][0],location[index][1]].set_xlabel(xlabels[index])
+            ax1[location[index][0],location[index][1]].set_ylabel(ylabels[index])
         plt.show()
+    @staticmethod
+    def visualize_most_active_day_pie(path: str, name_of_owner: str):
+        """
+        Creates a pie chart to visualize most active day for messages
+        :param path: path to root
+        :param name_of_owner: instagram name of user
+        :return: None
+        """
+        InstagramDataVisualizer.visualize_most_active_day(path,
+                                                          method = 0,
+                                                          titles = ["Characters SENT On Each Day of Week",
+                                                                    "Number of SENT Message On Each Day of Week",
+                                                                    "Characters RECEIVED On Each Day of Week",
+                                                                    "Number of RECEIVED Message On Each Day of Week",
+                                                                    ],
+                                                          xlabels = ["Days of Week"] * 4,
+                                                          ylabels = ["Number of Characters", "Number of Messages"]*2,
+                                                          name_of_owner = name_of_owner,
+                                                          )
+    @staticmethod
+    def visualize_most_active_day_bar(path: str, name_of_owner: str):
+        """
+        Creates a bar graph to visualize most active day for messages
+        :param path: path to root
+        :param name_of_owner: instagram name of user
+        :return: None
+        """
+        InstagramDataVisualizer.visualize_most_active_day(path,
+                                                          method = 1,
+                                                          titles = ["Characters SENT On Each Day of Week",
+                                                                    "Number of SENT Message On Each Day of Week",
+                                                                    "Characters RECEIVED On Each Day of Week",
+                                                                    "Number of RECEIVED Message On Each Day of Week",
+                                                                    ],
+                                                          xlabels = ["Days of Week"] * 4,
+                                                          ylabels = ["Number of Characters", "Number of Messages"]*2,
+                                                          name_of_owner = name_of_owner,
+                                                          )
+
 if __name__ == '__main__':
     import os
     from dotenv import load_dotenv
@@ -466,7 +527,7 @@ if __name__ == '__main__':
 
     path_to_data = os.environ["path_to_instagram_export_download"]
 
-    InstagramDataVisualizer.visualize_most_active_day(path_to_data, "Emre Cenk")
+    InstagramDataVisualizer.visualize_most_active_day_bar(path_to_data, "Emre Cenk")
     # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
     # InstagramDataVisualizer.visualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
