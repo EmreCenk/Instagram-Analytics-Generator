@@ -8,6 +8,7 @@ from src import utils
 from datetime import datetime
 from collections import defaultdict
 from warnings import warn
+from functools import lru_cache
 
 @contextmanager
 def different_cwd(path: str):
@@ -149,6 +150,7 @@ class InstagramDataAnalyzer():
         return mapped
 
     @staticmethod
+    @lru_cache
     def count_msgs(path: str,
                    time_specification: int = 2,
                    name_of_owner: str = "") -> (Dict[int, int], Dict[int, int], (Dict[int, int], Dict[int, int])):
@@ -159,16 +161,18 @@ class InstagramDataAnalyzer():
         Counts the character length and number of messages for each day/month/year/hour
         :param path: path to root folder
         :param time_specification: Integer between 0 and 3 to specify what cycle to count
-        NOTE: DAYS ARE INDEXED FROM 0-6, HOWEVER MONTHS ARE INDEXED FROM 1 TO 12.
         0 -> most active year (2018, 2019 ... 2022)
-        1 -> most active month (1, 2 ... 11)
+        1 -> most active month (1, 2 ... 12)
         2 -> most active day of week (0, 1, 2, 3 ... 6)
-        3 -> hour (1, 2, ... 24)
+        3 -> most active hour of day (1, 2, ... 24)
         :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one) : if 'name_of_owner' is left as an empty string, the first dictionary will contain messages sent by everyone, and the second message will be empty.
 
         :return: A dictionary that maps days/months/years to messages sent
         Note: Every entry in the dictionary is an integer. For instance, instead of monday, tuesday etc., the entries are 0, 1, 2 (where each integer corresponds to an index in the week).
+        NOTE: DAYS ARE INDEXED FROM 0-6, HOWEVER MONTHS ARE INDEXED FROM 1 TO 12.
+
         """
+
         if not(0 <= time_specification <= 3): raise ValueError(f"time_specification must be between 0 and 3. {time_specification} is not a valid value")
 
         time_string = utils.get_time_string(4) # we need most detailed time string
@@ -250,7 +254,7 @@ class InstagramDataAnalyzer():
         Everything is the same as InstagramDataAnalyzer.most_active_day_of_week except this function checks most active hours of the day
         """
         return InstagramDataAnalyzer.count_msgs(path, 3, name_of_owner=name_of_owner)
-    #todo: implement most active hours/days/months for messaging (pie chart or bar graph)
+
     #todo: find rankings between friends. Who did you exchange most chats with? Who sent you most messages? Who did you send most messages to? Who did you interact with most days? etc.
 
 

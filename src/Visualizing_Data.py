@@ -3,6 +3,7 @@ import numpy as np
 from src.Analyzing_Data import InstagramDataAnalyzer
 from src.popups import create_popup_message
 import matplotlib.pyplot as plt
+import matplotlib
 from datetime import datetime
 from dateutil import parser
 from typing import Dict, List
@@ -497,8 +498,7 @@ class InstagramDataVisualizer:
                 # print()
                 # print(titles[index])
                 ax1[location[index][0], location[index][1]].bar(labels, sizes)
-                ax1[location[index][0], location[index][1]].ticklabel_format(style='plain')
-                ax1[location[index][0], location[index][1]].ticklabel_format(useOffset=False)
+                ax1[location[index][0], location[index][1]].get_yaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
 
 
             ax1[location[index][0],location[index][1]].set_title(titles[index])
@@ -601,6 +601,11 @@ if __name__ == '__main__':
     plt.style.use('dark_background')
 
     path_to_data = os.environ["path_to_instagram_export_download"]
+    #cache test:
+    # InstagramDataAnalyzer.count_msgs(path_to_data, 0, "Emre Cenk")
+    # InstagramDataAnalyzer.count_msgs(path_to_data, 1, "Emre Cenk")
+    # InstagramDataAnalyzer.count_msgs(path_to_data, 2, "Emre Cenk")
+    # InstagramDataAnalyzer.count_msgs(path_to_data, 3, "Emre Cenk")
 
     InstagramDataVisualizer.visualize_most_active_year(path_to_data, "Emre Cenk", bar_graph=True )
     InstagramDataVisualizer.visualize_most_active_month(path_to_data, "Emre Cenk", bar_graph=True )
