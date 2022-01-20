@@ -1,15 +1,15 @@
 import datetime
 import os
 from contextlib import contextmanager
-from typing import List, Dict
+from typing import List, Dict, Callable
 from Retreiving_Data import InstagramDataRetreiver
 from dateutil import parser
 from src import utils
 from datetime import datetime
 from collections import defaultdict
 from warnings import warn
-from functools import lru_cache
 
+memo_count_msgs = {} # dict used to memoize the InstagramDataAnalyzer.count_msgs function
 @contextmanager
 def different_cwd(path: str):
     """
@@ -150,11 +150,9 @@ class InstagramDataAnalyzer():
         return mapped
 
     @staticmethod
-    @lru_cache
     def count_msgs(path: str,
                    time_specification: int = 2,
                    name_of_owner: str = "") -> (Dict[int, int], Dict[int, int], (Dict[int, int], Dict[int, int])):
-        #TODO: add option to cache data
 
         """
         Note: this function should not be directly called unless absolutely necessary. If you're trying to find a statistic, chances are there is a wrapper function for it.
@@ -172,6 +170,9 @@ class InstagramDataAnalyzer():
         NOTE: DAYS ARE INDEXED FROM 0-6, HOWEVER MONTHS ARE INDEXED FROM 1 TO 12.
 
         """
+        if (path, time_specification, name_of_owner) in memo_count_msgs: return memo_count_msgs[((path, time_specification, name_of_owner))]
+        print(path, time_specification, name_of_owner)
+
 
         if not(0 <= time_specification <= 3): raise ValueError(f"time_specification must be between 0 and 3. {time_specification} is not a valid value")
 
@@ -210,6 +211,8 @@ class InstagramDataAnalyzer():
             else:
                 received_lengths[current_] += len(message["content"])
                 number_of_received_messages[current_] += 1
+
+        memo_count_msgs[((path, time_specification, name_of_owner))] = (sent_lengths, number_of_sent_messages, received_lengths, number_of_received_messages)
         return sent_lengths, number_of_sent_messages, received_lengths, number_of_received_messages
 
     @staticmethod

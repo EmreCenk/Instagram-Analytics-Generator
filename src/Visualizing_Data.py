@@ -602,10 +602,13 @@ if __name__ == '__main__':
 
     path_to_data = os.environ["path_to_instagram_export_download"]
     #cache test:
-    # InstagramDataAnalyzer.count_msgs(path_to_data, 0, "Emre Cenk")
-    # InstagramDataAnalyzer.count_msgs(path_to_data, 1, "Emre Cenk")
-    # InstagramDataAnalyzer.count_msgs(path_to_data, 2, "Emre Cenk")
-    # InstagramDataAnalyzer.count_msgs(path_to_data, 3, "Emre Cenk")
+    InstagramDataAnalyzer.count_msgs(path_to_data, 0, "Emre Cenk")
+    InstagramDataAnalyzer.count_msgs(path_to_data, 0, "Emre Cenk")
+    InstagramDataAnalyzer.count_msgs(path_to_data, 0, "Emre Cenk")
+    InstagramDataAnalyzer.count_msgs(path_to_data, 0, "Emre Cenk")
+    InstagramDataAnalyzer.count_msgs(path_to_data, 1, "Emre Cenk")
+    InstagramDataAnalyzer.count_msgs(path_to_data, 2, "Emre Cenk")
+    InstagramDataAnalyzer.count_msgs(path_to_data, 3, "Emre Cenk")
 
     InstagramDataVisualizer.visualize_most_active_year(path_to_data, "Emre Cenk", bar_graph=True )
     InstagramDataVisualizer.visualize_most_active_month(path_to_data, "Emre Cenk", bar_graph=True )
