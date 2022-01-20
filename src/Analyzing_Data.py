@@ -157,9 +157,10 @@ class InstagramDataAnalyzer():
         Counts the character length and number of messages for each day/month/year/hour
         :param path: path to root folder
         :param time_specification: Integer between 0 and 3 to specify what cycle to count
+        NOTE: DAYS ARE INDEXED FROM 0-6, HOWEVER MONTHS ARE INDEXED FROM 1 TO 12.
         0 -> most active year (2018, 2019 ... 2022)
-        1 -> most active month (jan, feb ..dec)
-        2 -> most active day of week (monday, tuesday ... sunday)
+        1 -> most active month (1, 2 ... 11)
+        2 -> most active day of week (0, 1, 2, 3 ... 6)
         3 -> hour (1, 2, ... 24)
         :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one) : if 'name_of_owner' is left as an empty string, the first dictionary will contain messages sent by everyone, and the second message will be empty.
 

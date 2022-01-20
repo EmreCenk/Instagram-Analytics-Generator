@@ -435,35 +435,57 @@ class InstagramDataVisualizer:
         plt.show()
 
     @staticmethod
-    def visualize_most_active_day(path: str,
-                                  titles: List[str],
-                                  xlabels: List[str],
-                                  ylabels: List[str],
-                                  name_of_owner: str = "",
-                                  method: int = 0,
+    def visualize_message_activity_in_cycle(path: str,
+                                            titles: List[str],
+                                            xlabels: List[str],
+                                            ylabels: List[str],
+                                            name_of_owner: str = "",
+                                            method: int = 0,
+                                            interval: int = 0,
                                   ):
 
         """
         :param path: path to root
         :param index: 0, 1, 2, 3 depending on which one you wanna visualize. See InstagramDataAnalyzer.most_active_days_of_week to see which integer corresponds to which visualization
-        :param name_of_owner: instagram name of user
-        :param method: which type of graph you want.
         0 -> pie chart
         any other number -> bar graph
+        :param titles:  list of titles to place in plots
+        :param xlabels: list of x axis labels to place in plots
+        :param ylabels: list of y axis labels to place in plots
+        :param name_of_owner: instagram name of user
+        :param method: which type of graph you want.
+        :param interval: one of 0,1,2,3
+        0 -> most active year
+        1 -> most active month
+        2 -> most active day of week
+        3 -> hour
         :return:
         """
+        if not (0 <= interval <= 3): raise ValueError(f"Interval value must be between 0 and 3. {interval} is not a valid value")
+
+        days = [
+            [],
+            ['', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'],
+            ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            [],
+        ][interval]
+        data_func = [InstagramDataAnalyzer.most_active_years,
+                     InstagramDataAnalyzer.most_active_months,
+                     InstagramDataAnalyzer.most_active_days_of_week,
+                     InstagramDataAnalyzer.most_active_hours,][interval]
+
 
         fig1, ax1 = plt.subplots(2, 2)
         location = ((0,0), (0,1), (1,0), (1,1))
-        data = InstagramDataAnalyzer.most_active_days_of_week(path, name_of_owner)
-        days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-
+        data = data_func(path, name_of_owner)
         for index in range(4):
 
-
             labels, sizes = [], []
-            for d in range(7):
-                labels.append(days[d])
+            for d in sorted(data[index]):
+                if interval in {0, 3}: labels.append(d) #either a year or a ready string
+                else:
+                    print(days, d)
+                    labels.append(days[d])
                 sizes.append(data[index][d])
             if method == 0:
                 ax1[location[index][0],location[index][1]].pie(sizes, labels=labels, autopct='%1.1f%%',
@@ -485,7 +507,7 @@ class InstagramDataVisualizer:
         :param name_of_owner: instagram name of user
         :return: None
         """
-        InstagramDataVisualizer.visualize_most_active_day(path,
+        InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
                                                           method = 0,
                                                           titles = ["Characters SENT On Each Day of Week",
                                                                     "Number of SENT Message On Each Day of Week",
@@ -504,16 +526,17 @@ class InstagramDataVisualizer:
         :param name_of_owner: instagram name of user
         :return: None
         """
-        InstagramDataVisualizer.visualize_most_active_day(path,
-                                                          method = 1,
-                                                          titles = ["Characters SENT On Each Day of Week",
+        InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
+                                                                    method = 1,
+                                                                    titles = ["Characters SENT On Each Day of Week",
                                                                     "Number of SENT Message On Each Day of Week",
                                                                     "Characters RECEIVED On Each Day of Week",
                                                                     "Number of RECEIVED Message On Each Day of Week",
                                                                     ],
-                                                          xlabels = ["Days of Week"] * 4,
-                                                          ylabels = ["Number of Characters", "Number of Messages"]*2,
-                                                          name_of_owner = name_of_owner,
+                                                                    xlabels = ["Days of Week"] * 4,
+                                                                    ylabels = ["Number of Characters", "Number of Messages"]*2,
+                                                                    name_of_owner = name_of_owner,
+                                                                    interval = 1,
                                                           )
 
 if __name__ == '__main__':
