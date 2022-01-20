@@ -440,9 +440,9 @@ class InstagramDataVisualizer:
                                             xlabels: List[str],
                                             ylabels: List[str],
                                             name_of_owner: str = "",
-                                            method: int = 0,
+                                            graph_type: int = 0,
                                             interval: int = 0,
-                                  ):
+                                            ):
 
         """
         :param path: path to root
@@ -453,7 +453,7 @@ class InstagramDataVisualizer:
         :param xlabels: list of x axis labels to place in plots
         :param ylabels: list of y axis labels to place in plots
         :param name_of_owner: instagram name of user
-        :param method: which type of graph you want.
+        :param graph_type: which type of graph you want (0 means pie chart, any other number means bar graph)
         :param interval: one of 0,1,2,3
         0 -> most active year
         1 -> most active month
@@ -483,11 +483,9 @@ class InstagramDataVisualizer:
             labels, sizes = [], []
             for d in sorted(data[index]):
                 if interval in {0, 3}: labels.append(d) #either a year or a ready string
-                else:
-                    print(days, d)
-                    labels.append(days[d])
+                else: labels.append(days[d])
                 sizes.append(data[index][d])
-            if method == 0:
+            if graph_type == 0:
                 ax1[location[index][0],location[index][1]].pie(sizes, labels=labels, autopct='%1.1f%%',
                         shadow=False)
                 ax1[location[index][0],location[index][1]].axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
@@ -499,35 +497,60 @@ class InstagramDataVisualizer:
             ax1[location[index][0],location[index][1]].set_xlabel(xlabels[index])
             ax1[location[index][0],location[index][1]].set_ylabel(ylabels[index])
         plt.show()
+
     @staticmethod
-    def visualize_most_active_day_pie(path: str, name_of_owner: str):
-        """
-        Creates a pie chart to visualize most active day for messages
-        :param path: path to root
-        :param name_of_owner: instagram name of user
-        :return: None
-        """
-        InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
-                                                          method = 0,
-                                                          titles = ["Characters SENT On Each Day of Week",
-                                                                    "Number of SENT Message On Each Day of Week",
-                                                                    "Characters RECEIVED On Each Day of Week",
-                                                                    "Number of RECEIVED Message On Each Day of Week",
-                                                                    ],
-                                                          xlabels = ["Days of Week"] * 4,
-                                                          ylabels = ["Number of Characters", "Number of Messages"]*2,
-                                                          name_of_owner = name_of_owner,
-                                                          )
-    @staticmethod
-    def visualize_most_active_day_bar(path: str, name_of_owner: str):
+    def visualize_most_active_year(path: str, name_of_owner: str, bar_graph: bool = True):
         """
         Creates a bar graph to visualize most active day for messages
         :param path: path to root
+        :param bar_graph: True gives a bar graph, False gives a pie chart
         :param name_of_owner: instagram name of user
         :return: None
         """
         InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
-                                                                    method = 1,
+                                                                    graph_type = bar_graph,
+                                                                    titles = ["Characters SENT in Each Year",
+                                                                    "Number of SENT Message in Each Year",
+                                                                    "Characters RECEIVED in Each Year",
+                                                                    "Number of RECEIVED Message in Each Year",
+                                                                    ],
+                                                                    xlabels = ["Year"] * 4,
+                                                                    ylabels = ["Number of Characters", "Number of Messages"]*2,
+                                                                    name_of_owner = name_of_owner,
+                                                                    interval = 0,
+                                                                    )
+
+    @staticmethod
+    def visualize_most_active_month(path: str, name_of_owner: str, bar_graph: bool = True):
+        """
+        Creates a bar graph to visualize most active day for messages
+        :param path: path to root
+        :param bar_graph: True gives a bar graph, False gives a pie chart
+        :param name_of_owner: instagram name of user
+        :return: None
+        """
+        InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
+                                                                    graph_type = bar_graph,
+                                                                    titles = ["Characters SENT For Each Month",
+                                                                    "Number of SENT Message For Each Month",
+                                                                    "Characters RECEIVED For Each Month",
+                                                                    "Number of RECEIVED For Each Month",
+                                                                    ],
+                                                                    xlabels = ["Month"] * 4,
+                                                                    ylabels = ["Number of Characters", "Number of Messages"]*2,
+                                                                    name_of_owner = name_of_owner,
+                                                                    interval = 1)
+    @staticmethod
+    def visualize_most_active_day(path: str, name_of_owner: str, bar_graph: bool = True):
+        """
+        Creates a bar graph to visualize most active day for messages
+        :param path: path to root
+        :param bar_graph: True gives a bar graph, False gives a pie chart
+        :param name_of_owner: instagram name of user
+        :return: None
+        """
+        InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
+                                                                    graph_type = bar_graph,
                                                                     titles = ["Characters SENT On Each Day of Week",
                                                                     "Number of SENT Message On Each Day of Week",
                                                                     "Characters RECEIVED On Each Day of Week",
@@ -536,18 +559,42 @@ class InstagramDataVisualizer:
                                                                     xlabels = ["Days of Week"] * 4,
                                                                     ylabels = ["Number of Characters", "Number of Messages"]*2,
                                                                     name_of_owner = name_of_owner,
-                                                                    interval = 1,
-                                                          )
+                                                                    interval = 2,
+                                                                    )
+
+        @staticmethod
+        def visualize_most_active_hour(path: str, name_of_owner: str, bar_graph: bool = True):
+            """
+            Creates a bar graph to visualize most active day for messages
+            :param path: path to root
+            :param bar_graph: True gives a bar graph, False gives a pie chart
+            :param name_of_owner: instagram name of user
+            :return: None
+            """
+            InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
+                                                                        graph_type=bar_graph,
+                                                                        titles=["Characters SENT On Each Hour Of Day",
+                                                                                "Number of SENT Message On Each Hour Of Day",
+                                                                                "Characters RECEIVED On Each Hour Of Day",
+                                                                                "Number of RECEIVED Message On Each Hour Of Day",
+                                                                                ],
+                                                                        xlabels=["Hour of Day"] * 4,
+                                                                        ylabels=["Number of Characters",
+                                                                                 "Number of Messages"] * 2,
+                                                                        name_of_owner=name_of_owner,
+                                                                        interval=2,
+                                                                        )
 
 if __name__ == '__main__':
     import os
     from dotenv import load_dotenv
     load_dotenv()
 
+    plt.style.use('dark_background')
 
     path_to_data = os.environ["path_to_instagram_export_download"]
 
-    InstagramDataVisualizer.visualize_most_active_day_bar(path_to_data, "Emre Cenk")
+    InstagramDataVisualizer.visualize_most_active_year(path_to_data, "Emre Cenk", bar_graph=True )
     # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
     # InstagramDataVisualizer.visualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
