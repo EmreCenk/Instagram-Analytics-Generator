@@ -152,6 +152,8 @@ class InstagramDataAnalyzer():
     def count_msgs(path: str,
                    time_specification: int = 2,
                    name_of_owner: str = "") -> (Dict[int, int], Dict[int, int], (Dict[int, int], Dict[int, int])):
+        #TODO: add option to cache data
+
         """
         Note: this function should not be directly called unless absolutely necessary. If you're trying to find a statistic, chances are there is a wrapper function for it.
         Counts the character length and number of messages for each day/month/year/hour
