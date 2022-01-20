@@ -597,7 +597,7 @@ if __name__ == '__main__':
     InstagramDataVisualizer.visualize_most_active_year(path_to_data, "Emre Cenk", bar_graph=True )
     InstagramDataVisualizer.visualize_most_active_month(path_to_data, "Emre Cenk", bar_graph=True )
     InstagramDataVisualizer.visualize_most_active_day(path_to_data, "Emre Cenk", bar_graph=True )
-    InstagramDataVisualizer.visualize_most_active_h(path_to_data, "Emre Cenk", bar_graph=True )
+    InstagramDataVisualizer.visualize_most_active_hours(path_to_data, "Emre Cenk", bar_graph=True )
 
     # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
