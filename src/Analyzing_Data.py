@@ -10,17 +10,7 @@ from collections import defaultdict
 from warnings import warn
 
 memo_count_msgs = {} # dict used to memoize the InstagramDataAnalyzer.count_msgs function
-@contextmanager
-def different_cwd(path: str):
-    """
-    :param path: Path that you want to change directory to
-    """
-    oldpwd=os.getcwd()
-    os.chdir(path)
-    try:
-        yield
-    finally:
-        os.chdir(oldpwd)
+
 
 class InstagramDataAnalyzer():
 
