@@ -460,14 +460,11 @@ class InstagramDataVisualizer:
 
         for index in range(4):
 
-            total = 0
-            for d in data[index]:
-                total += data[index][d]
 
             labels, sizes = [], []
             for d in range(7):
                 labels.append(days[d])
-                sizes.append(data[index][d]/total)
+                sizes.append(data[index][d])
             if method == 0:
                 ax1[location[index][0],location[index][1]].pie(sizes, labels=labels, autopct='%1.1f%%',
                         shadow=False)
