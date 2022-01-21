@@ -83,11 +83,10 @@ class InstagramDataAnalyzer():
         return counting
 
     @staticmethod
-    def count_number_of_messages_per_day(path: str, name_of_owner: str = "", interval: int = 2) -> (Dict[datetime.date, str], Dict[datetime.date, str]):
+    def count_number_of_messages_per_day(path: str, interval: int = 2) -> (Dict[datetime.date, str], Dict[datetime.date, str]):
         """
         counts number of active chats per day
         :param path: path to root folder
-        :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one) : if 'name_of_owner' is left as an empty string, the first dictionary will contain messages sent by everyone, and the second message will be empty.
         :return: (received messages per day, sent messages per day)
         2 dictionaries that map dates to how many active chats are on that day.
         The first dictionary -> how many messages were received on each date
@@ -96,7 +95,7 @@ class InstagramDataAnalyzer():
 
 
         time_string = utils.get_time_string(interval)
-
+        name_of_owner = InstagramDataRetreiver.get_name(path)
         received = defaultdict(utils.zero)
         sent = defaultdict(utils.zero)
         for message, name in utils.loop_through_every_message(path):
@@ -142,7 +141,7 @@ class InstagramDataAnalyzer():
     @staticmethod
     def count_msgs(path: str,
                    time_specification: int = 2,
-                   name_of_owner: str = "") -> (Dict[int, int], Dict[int, int], (Dict[int, int], Dict[int, int])):
+                   ) -> (Dict[int, int], Dict[int, int], (Dict[int, int], Dict[int, int])):
 
         """
         Note: this function should not be directly called unless absolutely necessary. If you're trying to find a statistic, chances are there is a wrapper function for it.
@@ -153,13 +152,13 @@ class InstagramDataAnalyzer():
         1 -> most active month (1, 2 ... 12)
         2 -> most active day of week (0, 1, 2, 3 ... 6)
         3 -> most active hour of day (1, 2, ... 24)
-        :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one) : if 'name_of_owner' is left as an empty string, the first dictionary will contain messages sent by everyone, and the second message will be empty.
 
         :return: A dictionary that maps days/months/years to messages sent
         Note: Every entry in the dictionary is an integer. For instance, instead of monday, tuesday etc., the entries are 0, 1, 2 (where each integer corresponds to an index in the week).
         NOTE: DAYS ARE INDEXED FROM 0-6, HOWEVER MONTHS ARE INDEXED FROM 1 TO 12.
 
         """
+        name_of_owner = InstagramDataRetreiver.get_name(path)
         if (path, time_specification, name_of_owner) in memo_count_msgs: return memo_count_msgs[((path, time_specification, name_of_owner))]
         print(path, time_specification, name_of_owner)
 
@@ -206,25 +205,24 @@ class InstagramDataAnalyzer():
         return sent_lengths, number_of_sent_messages, received_lengths, number_of_received_messages
 
     @staticmethod
-    def most_active_years(path: str, name_of_owner: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
+    def most_active_years(path: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
         """
         Everything is the same as InstagramDataAnalyzer.most_active_day_of_week except this function checks most active years
         """
-        return InstagramDataAnalyzer.count_msgs(path, 0, name_of_owner=name_of_owner)
+        return InstagramDataAnalyzer.count_msgs(path, 0)
 
     @staticmethod
-    def most_active_months(path: str, name_of_owner: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
+    def most_active_months(path: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
         """
         Everything is the same as InstagramDataAnalyzer.most_active_day_of_week except this function checks most active months of the year
         """
-        return InstagramDataAnalyzer.count_msgs(path, 1, name_of_owner=name_of_owner)
+        return InstagramDataAnalyzer.count_msgs(path, 1)
 
 
     @staticmethod
-    def most_active_days_of_week(path: str, name_of_owner: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
+    def most_active_days_of_week(path: str,) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
         """
         :param path: path to root
-        :param name_of_owner: Instagram name of owner. The messages sent by this name will be filtered out, and placed into a separate dictionary (the second one) : if 'name_of_owner' is left as an empty string, the first dictionary will contain messages sent by everyone, and the second message will be empty.
         :return: 4 dicts that maps days to integers
         dict1 -> how many characters in total were SENT on each day
         dict2 -> number of SENT messages on each day
@@ -237,22 +235,21 @@ class InstagramDataAnalyzer():
             {0: 123, 1: 22, ... 6: 58},
             )
         """
-        return InstagramDataAnalyzer.count_msgs(path, 2, name_of_owner=name_of_owner)
+        return InstagramDataAnalyzer.count_msgs(path, 2)
 
 
 
     @staticmethod
-    def most_active_hours(path: str, name_of_owner: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
+    def most_active_hours(path: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
         """
         Everything is the same as InstagramDataAnalyzer.most_active_day_of_week except this function checks most active hours of the day
         """
-        return InstagramDataAnalyzer.count_msgs(path, 3, name_of_owner=name_of_owner)
+        return InstagramDataAnalyzer.count_msgs(path, 3)
 
     #todo: find rankings between friends. Who did you exchange most chats with? Who sent you most messages? Who did you send most messages to? Who did you interact with most days? etc.
 
     @staticmethod
     def friendship_rankings_by_messages_sent_to_user(path: str,
-                                                     name_of_owner: str,
                                                      method: int = 0,
                                                      ) -> (List, Dict[str, int]):
         """
@@ -261,11 +258,11 @@ class InstagramDataAnalyzer():
         :param method: which method to rank people by.
         0 -> rank by number of messages sent
         1 -> rank by length of messages sent
-        :param name_of_owner: Instagram name of owner
         :return: (List_of_people_in_descending_order, Dictionary_that_maps_usernames_to_points_gathered)
         Note: "points gathered" depends on which method is used. for method 0, "points gathered" will refer to how many messages, for method 1, "points gathered" will refer to total characters.
         """
         if not(method in {0, 1}): raise ValueError(f"method value must be either 0 or 1. Here are the meanings:\n0 -> rank by number of messages sent\n1 -> rank by length of messages sent\n{method} is not a valid method value")
+        name_of_owner = InstagramDataRetreiver.get_name(path)
         chats_that_sent_user_messages = defaultdict(utils.zero)
         for message, convo_name in utils.loop_through_every_message(path):
             if message["sender_name"] == name_of_owner: continue
@@ -284,7 +281,7 @@ if __name__ == '__main__':
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    a, b = InstagramDataAnalyzer.friendship_rankings_by_messages_sent_to_user(path_to_data, "Emre Cenk", method = 12)
+    a, b = InstagramDataAnalyzer.friendship_rankings_by_messages_sent_to_user(path_to_data, method = 12)
     for i, k in enumerate(a):
         print(str(i + 1) + ".\t", "(" + str(b[k]) + ")", utils.fix_username(k))
     # w = InstagramDataAnalyzer.count_msgs(path_to_data, name_of_owner="Emre Cenk")
