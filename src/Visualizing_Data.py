@@ -60,9 +60,9 @@ class InstagramDataVisualizer:
         """
         return utils.get_time_string(interval)
     @staticmethod
-    def visualize_message_length_over_time(path: str,
-                                           chat_name: str,
-                                           interval: int = 3) -> None:
+    def visualize_message_length_over_time_in_chat(path: str,
+                                                   chat_name: str,
+                                                   interval: int = 3) -> None:
         """
         Visualizes message length over time for any given chat. Each user is plotted separately.
         :param path: path to root of download
@@ -100,7 +100,7 @@ class InstagramDataVisualizer:
             plt.plot(x_axis, y_axis, label=username, color = colors[user_index%len(colors)])
 
         plt.title(f"Message length over time with '{chat_name}'")
-        plt.xlabel("date (year-month)")
+        plt.xlabel(InstagramDataVisualizer.get_x_axis_label(interval))
         plt.ylabel("length of message")
         plt.legend()
         plt.grid()
@@ -446,6 +446,7 @@ class InstagramDataVisualizer:
                                             ):
 
         """
+        Do not call directly. Use one of the wrapper functions.
         :param path: path to root
         :param index: 0, 1, 2, 3 depending on which one you wanna visualize. See InstagramDataAnalyzer.most_active_days_of_week to see which integer corresponds to which visualization
         0 -> pie chart
@@ -601,19 +602,18 @@ if __name__ == '__main__':
     plt.style.use('dark_background')
 
     path_to_data = os.environ["path_to_instagram_export_download"]
+    InstagramDataVisualizer.visualize_message_length_over_time_in_chat(path_to_data, "", interval = 4)
+    # InstagramDataVisualizer.visualize_messages_sent_and_received_over_time(path_to_data, "Emre Cenk")
     #cache test:
-    InstagramDataAnalyzer.count_msgs(path_to_data, 0, "Emre Cenk")
-    InstagramDataAnalyzer.count_msgs(path_to_data, 0, "Emre Cenk")
-    InstagramDataAnalyzer.count_msgs(path_to_data, 0, "Emre Cenk")
-    InstagramDataAnalyzer.count_msgs(path_to_data, 0, "Emre Cenk")
-    InstagramDataAnalyzer.count_msgs(path_to_data, 1, "Emre Cenk")
-    InstagramDataAnalyzer.count_msgs(path_to_data, 2, "Emre Cenk")
-    InstagramDataAnalyzer.count_msgs(path_to_data, 3, "Emre Cenk")
-
-    InstagramDataVisualizer.visualize_most_active_year(path_to_data, "Emre Cenk", bar_graph=True )
-    InstagramDataVisualizer.visualize_most_active_month(path_to_data, "Emre Cenk", bar_graph=True )
-    InstagramDataVisualizer.visualize_most_active_day(path_to_data, "Emre Cenk", bar_graph=True )
-    InstagramDataVisualizer.visualize_most_active_hours(path_to_data, "Emre Cenk", bar_graph=True )
+    # InstagramDataAnalyzer.count_msgs(path_to_data, 0, "Emre Cenk")
+    # InstagramDataAnalyzer.count_msgs(path_to_data, 1, "Emre Cenk")
+    # InstagramDataAnalyzer.count_msgs(path_to_data, 2, "Emre Cenk")
+    # InstagramDataAnalyzer.count_msgs(path_to_data, 3, "Emre Cenk")
+    #
+    # InstagramDataVisualizer.visualize_most_active_year(path_to_data, "Emre Cenk", bar_graph=True )
+    # InstagramDataVisualizer.visualize_most_active_month(path_to_data, "Emre Cenk", bar_graph=True )
+    # InstagramDataVisualizer.visualize_most_active_day(path_to_data, "Emre Cenk", bar_graph=True )
+    # InstagramDataVisualizer.visualize_most_active_hours(path_to_data, "Emre Cenk", bar_graph=True )
 
     # print(InstagramDataAnalyzer.list_chats(path_to_data))
     # InstagramDataVisualizer.visualize_logins(path_to_data)
