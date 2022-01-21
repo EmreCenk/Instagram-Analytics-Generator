@@ -1,15 +1,16 @@
 import numpy as np
 
-from src.Analyzing_Data import InstagramDataAnalyzer
-from src.popups import create_popup_message
+from src.Handling_Data.Analyzing_Data import InstagramDataAnalyzer
+from src.Handling_Data.popups import create_popup_message
 import matplotlib.pyplot as plt
 import matplotlib
 from datetime import datetime
 from dateutil import parser
 from typing import Dict, List
-from src.Retreiving_Data import InstagramDataRetreiver
+from src.Handling_Data.Retreiving_Data import InstagramDataRetreiver
 from collections import defaultdict
-from src import utils
+from src.Handling_Data import utils
+
 
 class InstagramDataVisualizer:
 

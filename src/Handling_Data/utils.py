@@ -1,4 +1,4 @@
-from src.Retreiving_Data import InstagramDataRetreiver
+from src.Handling_Data.Retreiving_Data import InstagramDataRetreiver
 from typing import Dict
 def get_time_string(interval: int = 3) -> str:
     """

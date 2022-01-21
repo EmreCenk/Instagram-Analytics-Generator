@@ -57,7 +57,8 @@ class InstagramDataRetreiver():
         :param root_path: path to root file
         :return: instagram name of user
         """
-        return InstagramDataRetreiver.get_personal_information(root_path)["string_map_data"]["Name"]["value"]
+        return InstagramDataRetreiver.get_personal_information(root_path)["string_map_data"]["Name"]["value" \
+                                                                                                     ""]
     @staticmethod
     def get_marketing_list(path: str) -> List[Dict]:
         """
