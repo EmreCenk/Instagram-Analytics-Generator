@@ -50,7 +50,14 @@ class InstagramDataRetreiver():
         return InstagramDataRetreiver.get_json_for_certain_path(root_path,
                                                                 ["account_information"],
                                                                 "personal_information.json")["profile_user"][0]
-
+    @staticmethod
+    def get_name(root_path: str) -> str:
+        """
+        returns the name of the user as saved in the instagram export file.
+        :param root_path: path to root file
+        :return: instagram name of user
+        """
+        return InstagramDataRetreiver.get_personal_information(root_path)["string_map_data"]["Name"]["value"]
     @staticmethod
     def get_marketing_list(path: str) -> List[Dict]:
         """

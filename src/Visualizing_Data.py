@@ -311,7 +311,6 @@ class InstagramDataVisualizer:
 
     @staticmethod
     def visualize_messages_sent_and_received_over_time(path: str,
-                                                               name_of_owner: str,
                                                                interval: int = 1,
                                                                plot_sent: bool = True,
                                                                plot_received: bool = True):
@@ -319,9 +318,6 @@ class InstagramDataVisualizer:
         The
         Visualizes the number of messages sent and received per day over time.
         :param path: path to root
-        :param name_of_owner: Instagram name of owner. The messages sent by this name will be plotted with a different name
-        :param interval: an integer between 0 and 3 inclusive that specifies what interval the messages will be plotted in.
-        See InstagramDataRetreiver.get_time_string for more information
         interval values:
         0 -> yearly intervals
         1 -> monthly intervals
@@ -332,6 +328,7 @@ class InstagramDataVisualizer:
         :param plot_received: if true, the number of messages received is plotted.
         :return: None
         """
+        name_of_owner = InstagramDataRetreiver.get_name(path)
         received, sent = InstagramDataAnalyzer.count_number_of_messages_per_day(path, name_of_owner, interval)
         sorted_received = sorted(received, key = lambda x: x)
         sorted_sent = sorted(sent, key = lambda x: x)
@@ -440,7 +437,6 @@ class InstagramDataVisualizer:
                                             titles: List[str],
                                             xlabels: List[str],
                                             ylabels: List[str],
-                                            name_of_owner: str = "",
                                             graph_type: int = 0,
                                             interval: int = 0,
                                             ):
@@ -454,7 +450,6 @@ class InstagramDataVisualizer:
         :param titles:  list of titles to place in plots
         :param xlabels: list of x axis labels to place in plots
         :param ylabels: list of y axis labels to place in plots
-        :param name_of_owner: instagram name of user
         :param graph_type: which type of graph you want (0 means pie chart, any other number means bar graph)
         :param interval: one of 0,1,2,3
         0 -> most active year
@@ -480,6 +475,7 @@ class InstagramDataVisualizer:
         fig1, ax1 = plt.subplots(2, 2)
 
         location = ((0,0), (0,1), (1,0), (1,1))
+        name_of_owner = InstagramDataRetreiver.get_name(path)
         data = data_func(path, name_of_owner)
         for index in range(4):
             labels, sizes = [], []
@@ -508,12 +504,11 @@ class InstagramDataVisualizer:
         plt.show()
 
     @staticmethod
-    def visualize_most_active_year(path: str, name_of_owner: str, bar_graph: bool = True):
+    def visualize_most_active_year(path: str, bar_graph: bool = True):
         """
         Creates a bar graph to visualize most active day for messages
         :param path: path to root
         :param bar_graph: True gives a bar graph, False gives a pie chart
-        :param name_of_owner: instagram name of user
         :return: None
         """
         InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
@@ -525,17 +520,15 @@ class InstagramDataVisualizer:
                                                                     ],
                                                                     xlabels = ["Year"] * 4,
                                                                     ylabels = ["Number of Characters", "Number of Messages"]*2,
-                                                                    name_of_owner = name_of_owner,
                                                                     interval = 0,
                                                                     )
 
     @staticmethod
-    def visualize_most_active_month(path: str, name_of_owner: str, bar_graph: bool = True):
+    def visualize_most_active_month(path: str, bar_graph: bool = True):
         """
         Creates a bar graph to visualize most active day for messages
         :param path: path to root
         :param bar_graph: True gives a bar graph, False gives a pie chart
-        :param name_of_owner: instagram name of user
         :return: None
         """
         InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
@@ -547,15 +540,13 @@ class InstagramDataVisualizer:
                                                                     ],
                                                                     xlabels = ["Month"] * 4,
                                                                     ylabels = ["Number of Characters", "Number of Messages"]*2,
-                                                                    name_of_owner = name_of_owner,
                                                                     interval = 1)
     @staticmethod
-    def visualize_most_active_day(path: str, name_of_owner: str, bar_graph: bool = True):
+    def visualize_most_active_day(path: str, bar_graph: bool = True):
         """
         Creates a bar graph to visualize most active day for messages
         :param path: path to root
         :param bar_graph: True gives a bar graph, False gives a pie chart
-        :param name_of_owner: instagram name of user
         :return: None
         """
         InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
@@ -567,17 +558,15 @@ class InstagramDataVisualizer:
                                                                     ],
                                                                     xlabels = ["Days of Week"] * 4,
                                                                     ylabels = ["Number of Characters", "Number of Messages"]*2,
-                                                                    name_of_owner = name_of_owner,
                                                                     interval = 2,
                                                                     )
 
     @staticmethod
-    def visualize_most_active_hours(path: str, name_of_owner: str, bar_graph: bool = True):
+    def visualize_most_active_hours(path: str, bar_graph: bool = True):
         """
         Creates a bar graph to visualize most active day for messages
         :param path: path to root
         :param bar_graph: True gives a bar graph, False gives a pie chart
-        :param name_of_owner: instagram name of user
         :return: None
         """
         InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
@@ -590,7 +579,6 @@ class InstagramDataVisualizer:
                                                                     xlabels=["Hour of Day"] * 4,
                                                                     ylabels=["Number of Characters",
                                                                              "Number of Messages"] * 2,
-                                                                    name_of_owner=name_of_owner,
                                                                     interval=3,
                                                                     )
 
