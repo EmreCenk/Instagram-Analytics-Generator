@@ -19,6 +19,39 @@ class InstagramDataRetreiver():
         return data
 
     @staticmethod
+    def get_personal_information(root_path: str) -> Dict:
+        """
+        Parses personal information json file
+        :param root_path: path to root folder
+        :return: A dictionary with the following format:
+        {'media_map_data': {'Profile Photo': {'creation_timestamp': 1628451477,
+                                              'title': '',
+                                              'uri': 'media/other/233868629_532664164608070_1766641927110870425_n_17894922671249380.jpg'}},
+         'string_map_data': {'Bio': {'href': '', 'timestamp': 0, 'value': "sjam '22"},
+                             'Gender': {'href': '', 'timestamp': 0, 'value': 'male'},
+                             'Name': {'href': '', 'timestamp': 0, 'value': 'Emre Cenk'},
+                             'Phone Confirmation Method': {'href': '',
+                                                           'timestamp': 0,
+                                                           'value': 'Unknown'},
+                             'Phone Confirmed': {'href': '',
+                                                 'timestamp': 0,
+                                                 'value': 'True'},
+                             'Phone Number': {'href': '',
+                                              'timestamp': 0,
+                                              'value': '+905537360604'},
+                             'Private Account': {'href': '',
+                                                 'timestamp': 0,
+                                                 'value': 'True'},
+                             'Username': {'href': '',
+                                          'timestamp': 0,
+                                          'value': 'emre.cenk99'}},
+         'title': 'User Information'}
+        """
+        return InstagramDataRetreiver.get_json_for_certain_path(root_path,
+                                                                ["account_information"],
+                                                                "personal_information.json")["profile_user"][0]
+
+    @staticmethod
     def get_marketing_list(path: str) -> List[Dict]:
         """
         :param path: Path to root folder of downloaded export
@@ -34,7 +67,7 @@ class InstagramDataRetreiver():
         # Finding path to ads from root:
         return InstagramDataRetreiver.get_json_for_certain_path(path,
                                                                ["ads_and_businesses"],
-                                                               "advertisers_using_your_activity_or_information.json")["ig_custom_audiences_all_types"]
+                                                               "advertisers_using_your_activity_or_information.json")["ig_custom_audiences_all_types"][0]
 
     @staticmethod
     def get_login(path: str) -> List[Dict]:
@@ -143,6 +176,6 @@ if __name__ == '__main__':
     load_dotenv()
     print = pprint
     path_to_data = os.environ["path_to_instagram_export_download"]
-    a = InstagramDataRetreiver.get_following(path_to_data)
-    print(len(a))
-    print(len(InstagramDataRetreiver.get_followers(path_to_data)))
+    print(
+        InstagramDataRetreiver.get_personal_information(path_to_data)
+    )

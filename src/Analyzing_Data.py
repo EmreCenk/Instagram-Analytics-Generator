@@ -265,7 +265,7 @@ class InstagramDataAnalyzer():
         :return: (List_of_people_in_descending_order, Dictionary_that_maps_usernames_to_points_gathered)
         Note: "points gathered" depends on which method is used. for method 0, "points gathered" will refer to how many messages, for method 1, "points gathered" will refer to total characters.
         """
-        if not(method in {0, 1}): raise ValueError(f"method must be either 0 or 1. {method} is not a valid value")
+        if not(method in {0, 1}): raise ValueError(f"method value must be either 0 or 1. Here are the meanings:\n0 -> rank by number of messages sent\n1 -> rank by length of messages sent\n{method} is not a valid method value")
         chats_that_sent_user_messages = defaultdict(utils.zero)
         for message, convo_name in utils.loop_through_every_message(path):
             if message["sender_name"] == name_of_owner: continue
@@ -284,9 +284,9 @@ if __name__ == '__main__':
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    a, b = InstagramDataAnalyzer.friendship_rankings_by_messages_sent_to_user(path_to_data, "Emre Cenk", method = 1)
+    a, b = InstagramDataAnalyzer.friendship_rankings_by_messages_sent_to_user(path_to_data, "Emre Cenk", method = 12)
     for i, k in enumerate(a):
-        print(str(i + 1) + ".\t", "(" + str(b[k]) + ")", utils.fix_username(k), k)
+        print(str(i + 1) + ".\t", "(" + str(b[k]) + ")", utils.fix_username(k))
     # w = InstagramDataAnalyzer.count_msgs(path_to_data, name_of_owner="Emre Cenk")
     #
     # from pprint import pprint
