@@ -582,6 +582,20 @@ class InstagramDataVisualizer:
                                                                     interval=3,
                                                                     )
 
+    @staticmethod
+    def friendship_ranking_histogram_by_number_of_messages_sent(path: str):
+        """
+        Creates a histogram by looking at how many messages each friend has sent
+        :param path: path to root
+        :return:
+        """
+        rankings, person_to_message_number = InstagramDataAnalyzer.friendship_rankings_by_messages_sent_to_user(path, method = 0)
+        data = [person_to_message_number[person] for person in person_to_message_number]
+        plt.hist(data, bins = 10)
+        plt.title("Distribution of how many messages were received for each chat")
+        plt.ylabel("Number of chats")
+        plt.xlabel("How many messages were sent to user")
+        plt.show()
 if __name__ == '__main__':
     import os
     from dotenv import load_dotenv
@@ -590,7 +604,8 @@ if __name__ == '__main__':
     plt.style.use('dark_background')
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    InstagramDataVisualizer.visualize_message_length_over_time_in_chat(path_to_data, "", interval = 4)
+    InstagramDataVisualizer.friendship_ranking_histogram_by_number_of_messages_sent(path_to_data)
+    # InstagramDataVisualizer.visualize_message_length_over_time_in_chat(path_to_data, "", interval = 4)
     # InstagramDataVisualizer.visualize_messages_sent_and_received_over_time(path_to_data, "Emre Cenk")
     #cache test:
     # InstagramDataAnalyzer.count_msgs(path_to_data, 0, "Emre Cenk")
