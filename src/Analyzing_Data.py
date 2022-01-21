@@ -250,6 +250,32 @@ class InstagramDataAnalyzer():
 
     #todo: find rankings between friends. Who did you exchange most chats with? Who sent you most messages? Who did you send most messages to? Who did you interact with most days? etc.
 
+    @staticmethod
+    def friendship_rankings_by_messages_sent_to_user(path: str,
+                                                     name_of_owner: str,
+                                                     method: int = 0,
+                                                     ) -> (List, Dict[str, int]):
+        """
+        Ranks people by looking at messages they sent to user
+        :param path: path to root
+        :param method: which method to rank people by.
+        0 -> rank by number of messages sent
+        1 -> rank by length of messages sent
+        :param name_of_owner: Instagram name of owner
+        :return: (List_of_people_in_descending_order, Dictionary_that_maps_usernames_to_points_gathered)
+        Note: "points gathered" depends on which method is used. for method 0, "points gathered" will refer to how many messages, for method 1, "points gathered" will refer to total characters.
+        """
+        if not(method in {0, 1}): raise ValueError(f"method must be either 0 or 1. {method} is not a valid value")
+        chats_that_sent_user_messages = defaultdict(utils.zero)
+        for message, convo_name in utils.loop_through_every_message(path):
+            if message["sender_name"] == name_of_owner: continue
+            if method == 0: chats_that_sent_user_messages[convo_name] += 1
+            elif method == 1:
+                if "content" not in message: continue
+                chats_that_sent_user_messages[convo_name] += len(message["content"])
+
+        sorted_people = sorted(chats_that_sent_user_messages, key = lambda x: chats_that_sent_user_messages[x], reverse = True)
+        return sorted_people, chats_that_sent_user_messages
 
 
 if __name__ == '__main__':
@@ -258,11 +284,14 @@ if __name__ == '__main__':
 
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    w = InstagramDataAnalyzer.count_msgs(path_to_data, name_of_owner="Emre Cenk")
-
-    from pprint import pprint
-    print = pprint
-    print(w)
+    a, b = InstagramDataAnalyzer.friendship_rankings_by_messages_sent_to_user(path_to_data, "Emre Cenk", method = 1)
+    for i, k in enumerate(a):
+        print(str(i + 1) + ".\t", "(" + str(b[k]) + ")", utils.fix_username(k), k)
+    # w = InstagramDataAnalyzer.count_msgs(path_to_data, name_of_owner="Emre Cenk")
+    #
+    # from pprint import pprint
+    # print = pprint
+    # print(w)
 
     # print(InstagramDataAnalyzer.count_number_of_active_dms(path_to_data))
     # for k in InstagramDataAnalyzer.count_active_chats_per_date(path_to_data, "Emre Cenk"):
