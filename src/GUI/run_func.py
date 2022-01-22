@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from typing import Callable
 import inspect
-
+from src.Handling_Data.Retreiving_Data import InstagramDataRetreiver
 class TrueFalseComboBox(ttk.Combobox):
     def __init__(self, *args):
         super().__init__(*args, values = ["True", "False"], state = "readonly")
@@ -11,6 +11,9 @@ class IntervalComboBox(ttk.Combobox):
     def __init__(self, *args):
         super().__init__(*args, values = ["0", "1", "2", "3"], state = "readonly")
 
+class ChatNameComboBox(ttk.Combobox):
+    def __init__(self, *args, path: str):
+        super().__init__(*args, values = InstagramDataRetreiver.list_chats(path), state = "readonly")
 
 def run_func_via_gui(func_to_run: Callable, ready_inputs=None) -> None:
 
@@ -57,6 +60,7 @@ def run_func_via_gui(func_to_run: Callable, ready_inputs=None) -> None:
         type_of_widget = type_to_widg[types[i]]
 
         if params[i] == "interval": current = IntervalComboBox(window)
+        elif params[i] == "chat_name" and "path" in ready_inputs: current = ChatNameComboBox(window, path = ready_inputs["path"])
         else: current = type_of_widget(window)
 
         current.place(relx=width, rely=offset*i, relwidth=1-width, relheight=offset, anchor="nw")
