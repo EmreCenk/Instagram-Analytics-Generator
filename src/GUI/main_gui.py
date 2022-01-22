@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from src.Handling_Data.Visualizing_Data import InstagramDataVisualizer
 from src.Handling_Data import utils
-
+from src.GUI.run_func import run_func_via_gui
 class fake_event:
     # Every time the screen is resized (aka the user changes the size of the window), the GUI executes the function
     # named "resize_all_text". By default, tkinter passes in an event object as an argument. Sometimes,
@@ -145,7 +145,7 @@ class GUI():
 
     def generate_current_graph(self):
         func_index = self.graph_function_name_to_index[self.graph_options.get()]
-        self.graph_functions[func_index](self.path_to_data)
+        run_func_via_gui(self.graph_functions[func_index], {"path": self.path_to_data})
     def place_generate_graph_button(self):
         self.generate_graph = ttk.Button(
             self.main_frame,
@@ -313,11 +313,11 @@ class GUI():
             self.root.mainloop()
 
 if __name__ == '__main__':
-    # a = GUI()
-    # a.start()
-    print(
-        inspect.signature(utils.get_all_user_created_static_methods(InstagramDataVisualizer)[0][0])
-    )
+    a = GUI()
+    a.start()
+    # print(
+    #     inspect.signature(utils.get_all_user_created_static_methods(InstagramDataVisualizer)[0][0])
+    # )
 
 
 
