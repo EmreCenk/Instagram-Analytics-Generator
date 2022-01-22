@@ -81,17 +81,26 @@ class InstagramDataVisualizer():
         plt.show()
 
     @staticmethod
-    def visualize_message_count_over_time(path: str, chat_name: str) -> None:
+    def visualize_message_count_over_time(path: str, chat_name: str, interval: int) -> None:
         """
         Vizualizes message count over time for a given chat.
         :param path: path to root
         :param chat_name: name of chat
+        :param interval: an integer between 0 and 3 inclusive that specifies what interval the messages will be plotted in.
+        See InstagramDataRetreiver.get_time_string for more information
+        interval values:
+        0 -> yearly intervals
+        1 -> monthly intervals
+        2 -> daily intervals
+        3 -> hourly interval
+        4 -> Minute intervals (may misrepresent data since a long message will create extreme spikes)
         :return: None
         """
 
         #todo: implement time strings to customize plot intervals on x axis
         colors = ['red', 'blue', 'darkkhaki', 'green', 'orange', 'purple', 'brown', 'pink', 'teal', 'maroon', 'cyan', 'magenta', 'navy', 'lime', 'olive', 'lavender', 'mauve', 'umber', 'murk', 'black', 'gray']
 
+        time_string = UtilsForDataViz.get_time_string(interval)
 
 
         to_plot = InstagramDataAnalyzer.get_message_length_over_time(path, chat_name)
@@ -103,7 +112,7 @@ class InstagramDataVisualizer():
 
                 #converting epoch timestamp to datetime object:
                 timestamps[i] = datetime.fromtimestamp(int(timestamps[i])/1000)
-                cache = parser.parse(timestamps[i].strftime('%Y-%m-%d'))
+                cache = parser.parse(timestamps[i].strftime(time_string))
 
 
                 if cache in days: days[cache] += 1
