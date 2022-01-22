@@ -465,6 +465,21 @@ class InstagramDataVisualizer():
         plt.ylabel("Number of chats")
         plt.xlabel("How many messages were sent to user")
         plt.show()
+
+    @staticmethod
+    def friendship_rankings_by_total_length_of_messages_they_sent_you(path: str):
+        sorted, mapped = InstagramDataAnalyzer.friendship_rankings_by_messages_sent_to_user(path, 1)
+        for i in range(10):
+            print(sorted[i], mapped[sorted[i]])
+        fig, ax = plt.subplots()
+        max = 10
+        total_sent = [mapped[sorted[i]] for i in range(max)]
+        names = [utils.fix_username(sorted[i]) for i in range(max)]
+        ax.barh(names, total_sent)
+        ax.invert_yaxis()
+        plt.xlabel("Number of characters sent")
+        plt.ylabel("Name of Chat")
+        plt.show()
 if __name__ == '__main__':
     import os
     from dotenv import load_dotenv
@@ -473,7 +488,8 @@ if __name__ == '__main__':
     plt.style.use('dark_background')
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    InstagramDataVisualizer.visualize_friendship_ranking_histogram_by_number_of_messages_sent(path_to_data)
+    InstagramDataVisualizer.friendship_rankings_by_total_length_of_messages_they_sent_you(path_to_data)
+    # InstagramDataVisualizer.visualize_friendship_ranking_histogram_by_number_of_messages_sent(path_to_data)
     # InstagramDataVisualizer.visualize_message_length_over_time_in_chat(path_to_data, "", interval = 4)
     # InstagramDataVisualizer.visualize_messages_sent_and_received_over_time(path_to_data, "Emre Cenk")
     #cache test:
