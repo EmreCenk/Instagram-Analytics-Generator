@@ -1,7 +1,7 @@
 import datetime
 import os
 from typing import List, Dict
-from Retreiving_Data import InstagramDataRetreiver
+from src.Handling_Data.Retreiving_Data import InstagramDataRetreiver
 from dateutil import parser
 from src.Handling_Data import utils
 from datetime import datetime

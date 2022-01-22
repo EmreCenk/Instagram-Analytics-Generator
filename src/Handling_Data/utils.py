@@ -1,5 +1,8 @@
 from src.Handling_Data.Retreiving_Data import InstagramDataRetreiver
 from typing import Dict
+import inspect
+import types
+from typing import List, Callable
 def get_time_string(interval: int = 3) -> str:
     """
     Gets a time string in the format of "%Y-%m-%d ..."
@@ -55,6 +58,21 @@ def fix_username(username: str) -> str:
 
 
 def zero(): return 0
+
+def get_all_user_created_static_methods(class_) -> List[Callable]:
+    """
+    Gets a list of all user created static methods for a given class
+    :param class_: Class for which you want the methods
+    :return: list of methods
+    """
+    return [ func[1] for func in inspect.getmembers(class_, predicate=inspect.isroutine) if callable(getattr(class_, func[0])) if isinstance(func[1], types.FunctionType)]
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':

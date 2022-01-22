@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
-import threading
+from src.Handling_Data.Visualizing_Data import InstagramDataVisualizer
 
 
 class fake_event:
@@ -155,9 +155,6 @@ class GUI():
 if __name__ == '__main__':
     a = GUI()
     a.start()
-
-
-
 
 
 
