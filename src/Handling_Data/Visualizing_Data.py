@@ -364,7 +364,7 @@ class InstagramDataVisualizer():
 
         fig.canvas.mpl_connect('pick_event', on_pick)
 
-        plt.title(f"Active Chats Over Time")
+        plt.title(f"Number of Active Chats Over Time")
         plt.xlabel(UtilsForDataViz.get_x_axis_label(interval))
         plt.ylabel("number of active chats")
         plt.legend()

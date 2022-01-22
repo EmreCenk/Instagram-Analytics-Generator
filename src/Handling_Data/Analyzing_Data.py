@@ -9,7 +9,7 @@ from collections import defaultdict
 from warnings import warn
 
 memo_count_msgs = {} # dict used to memoize the InstagramDataAnalyzer.count_msgs function
-
+memo_count_number_of_active_dms = {}
 
 class InstagramDataAnalyzer():
 
@@ -123,6 +123,7 @@ class InstagramDataAnalyzer():
         }
 
         """
+        if (path, interval) in memo_count_number_of_active_dms: return memo_count_number_of_active_dms[(path, interval)]
         time_string = utils.get_time_string(interval)
         mapped = defaultdict(set)
         for message, convo_name in utils.loop_through_every_message(path):
@@ -135,6 +136,7 @@ class InstagramDataAnalyzer():
             # todo: implement function that counts "number of people exposed to"
             # this function would add message["sender_name"] instead of convo_name
 
+        memo_count_number_of_active_dms[(path, interval)] = mapped
         return mapped
 
     @staticmethod

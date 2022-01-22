@@ -208,7 +208,7 @@ class GUI():
         folder = open("default.txt","w+")
         folder.write(self.folder_selected)
         folder.close()
-
+        self.path_to_data = self.folder_selected
         #creates an instance of "excel_searcher": (The code for the excel_searcher class is in the folder titled
         # "scraping_excel"
 
