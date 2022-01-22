@@ -59,13 +59,19 @@ def fix_username(username: str) -> str:
 
 def zero(): return 0
 
-def get_all_user_created_static_methods(class_) -> List[Callable]:
+def get_all_user_created_static_methods(class_) -> (List[Callable], List[str]):
     """
     Gets a list of all user created static methods for a given class
     :param class_: Class for which you want the methods
-    :return: list of methods
+    :return: [List_of_methods, List_of_methods_as_strings]
     """
-    return [ func[1] for func in inspect.getmembers(class_, predicate=inspect.isroutine) if callable(getattr(class_, func[0])) if isinstance(func[1], types.FunctionType)]
+    a, b = [], []
+    for func in inspect.getmembers(class_, predicate=inspect.isroutine):
+        if callable(getattr(class_, func[0])) and isinstance(func[1], types.FunctionType):
+            a.append(func[1])
+            b.append(func[0])
+    return a, b
+
 
 
 

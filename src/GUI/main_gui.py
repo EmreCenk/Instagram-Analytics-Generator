@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from src.Handling_Data.Visualizing_Data import InstagramDataVisualizer
-
+from src.Handling_Data import utils
 
 class fake_event:
     # Every time the screen is resized (aka the user changes the size of the window), the GUI executes the function
@@ -36,10 +36,6 @@ class GUI():
         # widgets and resize the text inside them to make sure that the text scales with the window size
 
         self.all_widgets=[] # a list of all widgets. This list is used when we want to clear the screen
-
-        self.folder_selected = "" #stores the folder that the excel files are in.
-
-
 
 
         self.root = tk.Tk()  # Initializes root (root is basically a tkinter class that stores a bunch of functions
@@ -98,19 +94,21 @@ class GUI():
             try: #if the widget is a tk widget, we can use .config
                 widget.config(font = (self.font[0],int(self.font[1]*scale)))
             except: #If the widget is a ttk widget, python will give an error if we try .config . ttk uses .configure
-                self.style.configure('my.TButton', font=self.font)
-                self.style.configure("TMenubutton", font = self.font)
-                widget["menu"].configure(font = self.font)
+                print(widget, widget.scale)
+                self.style.configure('my.TButton', font = (self.font[0],int(self.font[1]*scale)))
+                self.style.configure("TMenubutton", font = (self.font[0],int(self.font[1]*scale)))
+                try:widget["menu"].configure(ffont = (self.font[0],int(self.font[1]*scale)))
+                except: pass
 
     def place_file_button(self):
         #Places file selection button
-        things = ["a", "b", "c"]
+        noneed, options = utils.get_all_user_created_static_methods(InstagramDataVisualizer)
         w = tk.StringVar(self.root)
-        w.set(things[0])
+        w.set(options[0])
         self.file_button = ttk.OptionMenu(self.main_frame,
                                           w,
-                                          things[0],
-                                          *things,
+                                          options[0],
+                                          *options,
                                             # bg=self.BUTTON_COLOR,  # background color
 
                                             # fg = self.FOREGROUND_COLOR,
@@ -120,7 +118,7 @@ class GUI():
 
 
         self.file_button.place(relx=0.5, rely=0.4, relwidth=0.4, relheight=0.1, anchor="n")
-        self.file_button.scale=1
+        self.file_button.scale=0.5
         self.widgets_with_text.append(self.file_button)
         self.all_widgets.append(self.file_button)
 
