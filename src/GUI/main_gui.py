@@ -95,12 +95,12 @@ class GUI():
             try: #if the widget is a tk widget, we can use .config
                 widget.config(font = (self.font[0],int(self.font[1]*scale)))
             except: #If the widget is a ttk widget, python will give an error if we try .config . ttk uses .configure
-                print(widget, widget.scale)
                 self.style.configure('my.TButton', font = (self.font[0],int(self.font[1]*scale)))
                 self.style.configure("TMenubutton", font = (self.font[0],int(self.font[1]*scale)))
-                try:widget["menu"].configure(ffont = (self.font[0],int(self.font[1]*scale)))
+                try:
+                    widget["menu"].config(font = (self.font[0],int(self.font[1]*widget["menu"].scale)))
+                    # widget["menu"].configure(ffont = (self.font[0],int(self.font[1]*scale)))
                 except: pass
-
     def place_method_options(self):
         #Places file selection button
         self.graph_functions, options = utils.get_all_user_created_static_methods(InstagramDataVisualizer)
@@ -118,7 +118,7 @@ class GUI():
                                              # fg = self.FOREGROUND_COLOR,
                                              # command=self.select_file
                                              )
-
+        self.method_options["menu"].scale = 0.4
 
 
         self.method_options.place(relx=0.5, rely=0.4, relwidth=0.4, relheight=0.1, anchor="n")
