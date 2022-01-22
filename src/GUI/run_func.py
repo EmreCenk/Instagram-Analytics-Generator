@@ -29,7 +29,7 @@ def run_func_via_gui(func_to_run: Callable, ready_inputs=None) -> None:
                 return
             args.append(cur)
         warning["text"] = "Generating graph!"
-
+        warning.update()
         real_args = []
         for i in range(len(args)):
             if types[i] == bool: real_args.append(args[i] == "True")
