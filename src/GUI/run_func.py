@@ -31,9 +31,10 @@ def run_func_via_gui(func_to_run: Callable, ready_inputs=None) -> None:
         warning["text"] = "Generating graph!"
 
         real_args = []
-        print(args, types, entries, params)
         for i in range(len(args)):
-            real_args.append(types[i](args[i]))
+            if types[i] == bool: real_args.append(args[i] == "True")
+            else: real_args.append(types[i](args[i]))
+        print(func_to_run, real_args)
         func_to_run(*real_args)
     window = tk.Tk()
     window.title("Welcome to TutorialsPoint")
