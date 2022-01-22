@@ -1,10 +1,13 @@
 from src.Handling_Data.Analyzing_Data import InstagramDataAnalyzer
 import matplotlib.pyplot as plt
 import matplotlib
-from typing import Dict, List
+from typing import Dict, List, Callable
 from src.Handling_Data.Retreiving_Data import InstagramDataRetreiver
 from collections import defaultdict
 from src.Handling_Data import utils
+from src.GUI.popups import create_popup_message
+from datetime import datetime
+from dateutil import parser
 
 class UtilsForDataViz():
 
@@ -139,3 +142,107 @@ class UtilsForDataViz():
             ax1[location[index][0],location[index][1]].set_xlabel(xlabels[index])
             ax1[location[index][0],location[index][1]].set_ylabel(ylabels[index])
         plt.show()
+
+    @staticmethod
+    def visualize_gains(path: str,
+                        func_to_get_data: Callable,
+                        interval: int = 1,
+                        what_gained: str = "followers",
+                        ):
+        """
+        Visualizes follower or following gain over time
+        :param path: path to root
+        :param interval: an integer between 0 and 3 inclusive that specifies what interval the messages will be plotted in.
+        See InstagramDataRetreiver.get_time_string for more information
+        interval values:
+        0 -> yearly intervals
+        1 -> monthly intervals
+        2 -> daily intervals
+        3 -> hourly interval
+        4 -> Minute intervals (may misrepresent data since a long message will create extreme spikes)
+        :return: None
+        """
+        time_string = UtilsForDataViz.get_time_string(interval)
+        followers = func_to_get_data(path)
+
+        followers = sorted(followers, key = lambda person: person["string_list_data"][0]["timestamp"])
+
+        categorized_by_date = {}
+        for person in followers:
+            # timestamps[i] = datetime.fromtimestamp(int(timestamps[i]) / 1000)
+            # cache = parser.parse(timestamps[i].strftime(time_string))
+            follow_date = datetime.fromtimestamp(int(person["string_list_data"][0]["timestamp"]))
+            follow_date = parser.parse(follow_date.strftime(time_string))
+            if follow_date in categorized_by_date: categorized_by_date[follow_date].append(person)
+            else: categorized_by_date[follow_date] = [person]
+
+
+        #plotting data:
+        xs, ys = [], []
+        names = []
+        fig, ax = plt.subplots()
+
+        for date in categorized_by_date:
+            xs.append(date)
+            ys.append(len(categorized_by_date[date]))
+            names.append("")
+            for person in categorized_by_date[date]:
+
+                names[-1] += person["string_list_data"][0]["value"] + "\n"
+
+        ax.plot_date(xs, ys, picker=5)
+        plt.plot(xs, ys)
+
+
+
+
+        def on_pick(event):
+            line = event.artist
+            xdata, ydata = line.get_data()
+            ind = event.ind
+            how_many = ydata[ind]
+            dates = xdata[ind]
+
+            for i in range(len(how_many)):
+                current_follower_num = how_many[i]
+                current_followers = ""
+
+                for person in categorized_by_date[dates[i]]:
+                    date_followed = datetime.fromtimestamp(person['string_list_data'][0]['timestamp'])
+
+                    current_followers += f"{person['string_list_data'][0]['value']}\t\t\t\t[{date_followed}]\n"
+                popup_title = f"{current_follower_num} {what_gained}"
+                if current_follower_num > 1: popup_title += "s"
+                popup_title += f" in the {['year', 'month', 'day', 'hour', 'minute'][interval]} of {dates[i].strftime(time_string)}:"
+                create_popup_message(
+                    message = current_followers,
+                    title_in_popup = popup_title,
+                    window_title = f"{what_gained} information")
+                break #todo: implement threads to create multiple windows when data points coincide
+
+        fig.canvas.mpl_connect('pick_event', on_pick)
+
+        plt.title(f"{what_gained} Increase Over Time\nNote: Please click on the data points to see a list of {what_gained} at that specific date")
+        plt.xlabel(UtilsForDataViz.get_x_axis_label(interval))
+        plt.ylabel(f"Number of {what_gained}")
+        plt.legend()
+        plt.grid()
+        plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
