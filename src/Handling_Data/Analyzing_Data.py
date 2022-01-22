@@ -10,6 +10,7 @@ from warnings import warn
 
 memo_count_msgs = {} # dict used to memoize the InstagramDataAnalyzer.count_msgs function
 memo_count_number_of_active_dms = {}
+memo_count_number_of_messages_per_day = {}
 
 class InstagramDataAnalyzer():
 
@@ -91,7 +92,7 @@ class InstagramDataAnalyzer():
         The first dictionary -> how many messages were received on each date
         Second Dictionary -> how many messages 'name_of_owner' sent on each date
         """
-
+        if (path, interval) in memo_count_number_of_messages_per_day: return memo_count_number_of_messages_per_day[(path, interval)]
 
         time_string = utils.get_time_string(interval)
         name_of_owner = InstagramDataRetreiver.get_name(path)
@@ -108,6 +109,8 @@ class InstagramDataAnalyzer():
 
         if len(sent) == 0 and name_of_owner != "":
             warn(f"\nIt appears {name_of_owner} has sent 0 messages in the entire history of your account. This is probably due to a mistake in the 'name_of_owner' variable specified.\nPlease make sure '{name_of_owner}' is the correct name.")
+
+        memo_count_number_of_messages_per_day[(path, interval)] = (received, sent)
         return received, sent
 
     @staticmethod
