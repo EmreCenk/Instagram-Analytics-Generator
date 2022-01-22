@@ -1,6 +1,6 @@
 import numpy as np
 from src.Handling_Data.Analyzing_Data import InstagramDataAnalyzer
-from src.Handling_Data.popups import create_popup_message
+from src.GUI.popups import create_popup_message
 import matplotlib.pyplot as plt
 from datetime import datetime
 from dateutil import parser
