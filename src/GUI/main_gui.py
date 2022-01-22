@@ -1,3 +1,4 @@
+import inspect
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from src.Handling_Data.Visualizing_Data import InstagramDataVisualizer
@@ -312,9 +313,11 @@ class GUI():
             self.root.mainloop()
 
 if __name__ == '__main__':
-    a = GUI()
-    a.start()
-
+    # a = GUI()
+    # a.start()
+    print(
+        inspect.signature(utils.get_all_user_created_static_methods(InstagramDataVisualizer)[0][0])
+    )
 
 
 
