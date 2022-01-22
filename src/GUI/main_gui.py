@@ -100,27 +100,27 @@ class GUI():
                 try:widget["menu"].configure(ffont = (self.font[0],int(self.font[1]*scale)))
                 except: pass
 
-    def place_file_button(self):
+    def place_method_options(self):
         #Places file selection button
         noneed, options = utils.get_all_user_created_static_methods(InstagramDataVisualizer)
         w = tk.StringVar(self.root)
         w.set(options[0])
-        self.file_button = ttk.OptionMenu(self.main_frame,
-                                          w,
-                                          options[0],
-                                          *options,
-                                            # bg=self.BUTTON_COLOR,  # background color
+        self.method_options = ttk.OptionMenu(self.main_frame,
+                                             w,
+                                             options[0],
+                                             *options,
+                                             # bg=self.BUTTON_COLOR,  # background color
 
-                                            # fg = self.FOREGROUND_COLOR,
-                                            # command=self.select_file
-                                                      )
+                                             # fg = self.FOREGROUND_COLOR,
+                                             # command=self.select_file
+                                             )
 
 
 
-        self.file_button.place(relx=0.5, rely=0.4, relwidth=0.4, relheight=0.1, anchor="n")
-        self.file_button.scale=0.5
-        self.widgets_with_text.append(self.file_button)
-        self.all_widgets.append(self.file_button)
+        self.method_options.place(relx=0.5, rely=0.4, relwidth=0.4, relheight=0.1, anchor="n")
+        self.method_options.scale=0.5
+        self.widgets_with_text.append(self.method_options)
+        self.all_widgets.append(self.method_options)
 
     def place_path_label(self, path):
         #Places the text that shows which path the user has selected
@@ -143,7 +143,7 @@ class GUI():
     def start(self,start_mainloop = True):
         #This function starts the gui
 
-        self.place_file_button()
+        self.place_method_options()
         self.place_path_label("aasdf")
 
         if start_mainloop:
