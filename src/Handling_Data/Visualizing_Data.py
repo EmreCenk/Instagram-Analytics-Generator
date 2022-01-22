@@ -1,18 +1,14 @@
 import numpy as np
-
 from src.Handling_Data.Analyzing_Data import InstagramDataAnalyzer
 from src.Handling_Data.popups import create_popup_message
 import matplotlib.pyplot as plt
-import matplotlib
 from datetime import datetime
 from dateutil import parser
-from typing import Dict, List
 from src.Handling_Data.Retreiving_Data import InstagramDataRetreiver
-from collections import defaultdict
 from src.Handling_Data import utils
+from src.Handling_Data.Data_Viz_Utils import UtilsForDataViz
 
-
-class InstagramDataVisualizer:
+class InstagramDataVisualizer():
 
     @staticmethod
     def visualize_logins(path: str) -> None:
@@ -38,29 +34,6 @@ class InstagramDataVisualizer:
         plt.show()
 
     @staticmethod
-    def get_x_axis_label(interval: int) -> str:
-        """
-        Gets a corresponding x axis title according to the interval value passed into InstagramDataVisualizer.get_time_string
-        :param interval:
-        :return: a title specifying the date intervals
-        """
-
-        a = defaultdict(str)
-        a[0] = "(Yearly Intervals)"
-        a[1] = "(Monthly Intervals)"
-        a[2] = "(Daily Intervals)"
-        a[3] = "(Hour Intervals)"
-        a[4] = "(Minute Intervals)"
-        return "date \n" + a[interval]
-    @staticmethod
-    def get_time_string(interval: int = 3) -> str:
-        """
-        Wrapper function for utils.get_time_string
-        Originally, the function was written under the InstagramDataVisualizer class, but was then moved to utils.
-        Instead of changing every occurrence, I just converted this to a wrapper.
-        """
-        return utils.get_time_string(interval)
-    @staticmethod
     def visualize_message_length_over_time_in_chat(path: str,
                                                    chat_name: str,
                                                    interval: int = 3) -> None:
@@ -78,7 +51,7 @@ class InstagramDataVisualizer:
         NOTE: Hourly intervals for chats that span a long period of time is not recommended.
         :return: None
         """
-        time_string = InstagramDataVisualizer.get_time_string(interval)
+        time_string = UtilsForDataViz.get_time_string(interval)
 
 
         colors = ['red', 'blue', 'darkkhaki', 'green', 'orange', 'purple', 'brown', 'pink', 'teal', 'maroon', 'cyan', 'magenta', 'navy', 'lime', 'olive', 'lavender', 'mauve', 'umber', 'murk', 'black', 'gray']
@@ -101,7 +74,7 @@ class InstagramDataVisualizer:
             plt.plot(x_axis, y_axis, label=username, color = colors[user_index%len(colors)])
 
         plt.title(f"Message length over time with '{chat_name}'")
-        plt.xlabel(InstagramDataVisualizer.get_x_axis_label(interval))
+        plt.xlabel(UtilsForDataViz.get_x_axis_label(interval))
         plt.ylabel("length of message")
         plt.legend()
         plt.grid()
@@ -150,42 +123,7 @@ class InstagramDataVisualizer:
         plt.grid()
         plt.show()
 
-    @staticmethod
-    def pie_chart_for_word_frequency(word_dict: Dict[str, int],
-                                     word_limit_in_pie: int,
-                                     total: int = None,
-                                     title: str = "",
-                                     x_axis_title: str = "",
-                                     y_axis_title: str = ""):
-        if total is None:
-            total = 0
-            for word in word_dict: total += word_dict[word]
 
-        i = 0
-        labels = []
-        sizes = []
-        in_pie = 0
-        for word in word_dict:
-            if i > word_limit_in_pie: break
-            sizes.append(100 * word_dict[word] / total)
-            l = word + f" ({word_dict[word]} mention"
-            if word_dict[word] > 1: l+="s"
-            l+=")"
-            labels.append(l)
-            in_pie += 100 * word_dict[word] / total
-            i += 1
-        if 100 - in_pie > 0.01:
-            labels.append("other")
-            sizes.append(100 - in_pie)
-
-        fig1, ax1 = plt.subplots()
-        ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
-                shadow=False)
-        ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-        plt.title(title)
-        plt.xlabel(x_axis_title)
-        plt.ylabel(y_axis_title)
-        plt.show()
     @staticmethod
     def visualize_unique_words(path: str, chat_name: str, word_limit_in_pie: int = 10):
         """
@@ -202,7 +140,7 @@ class InstagramDataVisualizer:
         for word, v in sorted(words.items(), key=lambda item: item[1], reverse = True):
             a[word] = v
             total += v
-        InstagramDataVisualizer.pie_chart_for_word_frequency(a,
+        UtilsForDataViz.pie_chart_for_word_frequency(a,
                                                              word_limit_in_pie,
                                                              total,
                                                              title = f"Word Usage in {chat_name}")
@@ -223,7 +161,7 @@ class InstagramDataVisualizer:
                 mentions[word] =  words[word]
         sorted_mentions = {k: v for k, v in sorted(mentions.items(), key=lambda item: item[1], reverse = True)}
 
-        InstagramDataVisualizer.pie_chart_for_word_frequency(sorted_mentions,
+        UtilsForDataViz.pie_chart_for_word_frequency(sorted_mentions,
                                                              len(sorted_mentions),
                                                              title = f"Number of mentions with {chat_name}")
 
@@ -243,7 +181,7 @@ class InstagramDataVisualizer:
         :return: None
 
         """
-        time_string = InstagramDataVisualizer.get_time_string(interval)
+        time_string = UtilsForDataViz.get_time_string(interval)
         followers = InstagramDataRetreiver.get_followers(path)
 
         followers = sorted(followers, key = lambda person: person["string_list_data"][0]["timestamp"])
@@ -304,7 +242,7 @@ class InstagramDataVisualizer:
         fig.canvas.mpl_connect('pick_event', on_pick)
 
         plt.title(f"Followers Gained Over Time")
-        plt.xlabel(InstagramDataVisualizer.get_x_axis_label(interval))
+        plt.xlabel(UtilsForDataViz.get_x_axis_label(interval))
         plt.ylabel("follower number")
         plt.legend()
         plt.grid()
@@ -330,7 +268,7 @@ class InstagramDataVisualizer:
         :return: None
         """
         name_of_owner = InstagramDataRetreiver.get_name(path)
-        received, sent = InstagramDataAnalyzer.count_number_of_messages_per_day(path, name_of_owner, interval)
+        received, sent = InstagramDataAnalyzer.count_number_of_messages_per_day(path, interval)
         sorted_received = sorted(received, key = lambda x: x)
         sorted_sent = sorted(sent, key = lambda x: x)
 
@@ -350,7 +288,7 @@ class InstagramDataVisualizer:
         plt.plot(sorted_received, yreceived, label=f"number of messages received by {name_of_owner}")
 
         plt.title(f"Number of Messages Received and Sent")
-        plt.xlabel(InstagramDataVisualizer.get_x_axis_label(interval))
+        plt.xlabel(UtilsForDataViz.get_x_axis_label(interval))
         plt.ylabel("number of messages")
         plt.legend()
         plt.grid()
@@ -427,82 +365,12 @@ class InstagramDataVisualizer:
         fig.canvas.mpl_connect('pick_event', on_pick)
 
         plt.title(f"Active Chats Over Time")
-        plt.xlabel(InstagramDataVisualizer.get_x_axis_label(interval))
+        plt.xlabel(UtilsForDataViz.get_x_axis_label(interval))
         plt.ylabel("number of active chats")
         plt.legend()
         plt.grid()
         plt.show()
 
-    @staticmethod
-    def visualize_message_activity_in_cycle(path: str,
-                                            titles: List[str],
-                                            xlabels: List[str],
-                                            ylabels: List[str],
-                                            graph_type: int = 0,
-                                            interval: int = 0,
-                                            ):
-
-        """
-        Do not call directly. Use one of the wrapper functions.
-        :param path: path to root
-        :param index: 0, 1, 2, 3 depending on which one you wanna visualize. See InstagramDataAnalyzer.most_active_days_of_week to see which integer corresponds to which visualization
-        0 -> pie chart
-        any other number -> bar graph
-        :param titles:  list of titles to place in plots
-        :param xlabels: list of x axis labels to place in plots
-        :param ylabels: list of y axis labels to place in plots
-        :param graph_type: which type of graph you want (0 means pie chart, any other number means bar graph)
-        :param interval: one of 0,1,2,3
-        0 -> most active year
-        1 -> most active month
-        2 -> most active day of week
-        3 -> hour
-        :return:
-        """
-        if not (0 <= interval <= 3): raise ValueError(f"Interval value must be between 0 and 3. {interval} is not a valid value")
-
-        days = [
-            [],
-            ['', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'],
-            ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-            [],
-        ][interval]
-        data_func = [InstagramDataAnalyzer.most_active_years,
-                     InstagramDataAnalyzer.most_active_months,
-                     InstagramDataAnalyzer.most_active_days_of_week,
-                     InstagramDataAnalyzer.most_active_hours,][interval]
-
-
-        fig1, ax1 = plt.subplots(2, 2)
-
-        location = ((0,0), (0,1), (1,0), (1,1))
-        name_of_owner = InstagramDataRetreiver.get_name(path)
-        data = data_func(path, name_of_owner)
-        for index in range(4):
-            labels, sizes = [], []
-            for d in sorted(data[index]):
-                if interval in {0, 3}: labels.append(d) #either a year or a ready string
-                else: labels.append(days[d])
-                sizes.append(data[index][d])
-
-
-            if graph_type == 0:
-                ax1[location[index][0],location[index][1]].pie(sizes, labels=labels, autopct='%1.1f%%',
-                        shadow=False)
-                ax1[location[index][0],location[index][1]].axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-            else:
-                # print(labels, sizes)
-                # print()
-                # print(titles[index])
-                ax1[location[index][0], location[index][1]].bar(labels, sizes)
-                ax1[location[index][0], location[index][1]].get_yaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
-
-
-            ax1[location[index][0],location[index][1]].set_title(titles[index])
-            ax1[location[index][0],location[index][1]].set_xlabel(xlabels[index])
-            ax1[location[index][0],location[index][1]].set_ylabel(ylabels[index])
-        plt.show()
 
     @staticmethod
     def visualize_most_active_year(path: str, bar_graph: bool = True):
@@ -512,7 +380,7 @@ class InstagramDataVisualizer:
         :param bar_graph: True gives a bar graph, False gives a pie chart
         :return: None
         """
-        InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
+        UtilsForDataViz.visualize_message_activity_in_cycle(path,
                                                                     graph_type = bar_graph,
                                                                     titles = ["Characters SENT in Each Year",
                                                                     "Number of SENT Message in Each Year",
@@ -532,7 +400,7 @@ class InstagramDataVisualizer:
         :param bar_graph: True gives a bar graph, False gives a pie chart
         :return: None
         """
-        InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
+        UtilsForDataViz.visualize_message_activity_in_cycle(path,
                                                                     graph_type = bar_graph,
                                                                     titles = ["Characters SENT For Each Month",
                                                                     "Number of SENT Message For Each Month",
@@ -550,7 +418,7 @@ class InstagramDataVisualizer:
         :param bar_graph: True gives a bar graph, False gives a pie chart
         :return: None
         """
-        InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
+        UtilsForDataViz.visualize_message_activity_in_cycle(path,
                                                                     graph_type = bar_graph,
                                                                     titles = ["Characters SENT On Each Day of Week",
                                                                     "Number of SENT Message On Each Day of Week",
@@ -570,7 +438,7 @@ class InstagramDataVisualizer:
         :param bar_graph: True gives a bar graph, False gives a pie chart
         :return: None
         """
-        InstagramDataVisualizer.visualize_message_activity_in_cycle(path,
+        UtilsForDataViz.visualize_message_activity_in_cycle(path,
                                                                     graph_type=bar_graph,
                                                                     titles=["Characters SENT On Each Hour Of Day",
                                                                             "Number of SENT Message On Each Hour Of Day",
@@ -584,7 +452,7 @@ class InstagramDataVisualizer:
                                                                     )
 
     @staticmethod
-    def friendship_ranking_histogram_by_number_of_messages_sent(path: str):
+    def visualize_friendship_ranking_histogram_by_number_of_messages_sent(path: str):
         """
         Creates a histogram by looking at how many messages each friend has sent
         :param path: path to root
@@ -605,7 +473,7 @@ if __name__ == '__main__':
     plt.style.use('dark_background')
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    InstagramDataVisualizer.friendship_ranking_histogram_by_number_of_messages_sent(path_to_data)
+    InstagramDataVisualizer.visualize_friendship_ranking_histogram_by_number_of_messages_sent(path_to_data)
     # InstagramDataVisualizer.visualize_message_length_over_time_in_chat(path_to_data, "", interval = 4)
     # InstagramDataVisualizer.visualize_messages_sent_and_received_over_time(path_to_data, "Emre Cenk")
     #cache test:

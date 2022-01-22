@@ -102,11 +102,14 @@ class GUI():
 
     def place_method_options(self):
         #Places file selection button
-        noneed, options = utils.get_all_user_created_static_methods(InstagramDataVisualizer)
-        w = tk.StringVar(self.root)
-        w.set(options[0])
+        self.graph_functions, options = utils.get_all_user_created_static_methods(InstagramDataVisualizer)
+        self.graph_function_name_to_index = {}
+        for i, func_name in enumerate(options):
+            self.graph_function_name_to_index[func_name] = i
+        self.graph_options = tk.StringVar(self.root)
+        self.graph_options.set(options[0])
         self.method_options = ttk.OptionMenu(self.main_frame,
-                                             w,
+                                             self.graph_options,
                                              options[0],
                                              *options,
                                              # bg=self.BUTTON_COLOR,  # background color
@@ -140,7 +143,8 @@ class GUI():
         self.widgets_with_text.append(self.path_label)
 
     def generate_current_graph(self):
-        print("hi")
+        func_index = self.graph_function_name_to_index[self.graph_options.get()]
+        self.graph_functions[func_index](self.path_to_data)
     def place_generate_graph_button(self):
         self.generate_graph = ttk.Button(
             self.main_frame,
@@ -279,10 +283,16 @@ class GUI():
 
     def start(self,start_mainloop = True):
         #We read the default.txt file:
-        folder = open("default.txt", "r")
-        default=folder.read()
-        folder.close()
+        try:
+            folder = open("default.txt", "r")
+            default=folder.read()
+            folder.close()
+        except:
+            folder = open("default.txt", "a+")
+            default=folder.read()
+            folder.close()
 
+        self.path_to_data = default
         if default!="":
             #If there is no default folder selected, we set up the select file button:
             self.place_path_label(default)
