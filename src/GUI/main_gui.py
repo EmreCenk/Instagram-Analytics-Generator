@@ -268,7 +268,7 @@ class GUI():
     def place_file_button(self):
         #Places file selection button
         self.file_button = ttk.Button(self.main_frame,  # Since this will be the child of the initial frame
-                            text="Select Folder",
+                            text="Select Export Folder",
                             # bg=self.BUTTON_COLOR,  # background color
 
                             # fg = self.FOREGROUND_COLOR,
