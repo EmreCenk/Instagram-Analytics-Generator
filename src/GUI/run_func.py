@@ -37,7 +37,7 @@ def run_func_via_gui(func_to_run: Callable, ready_inputs=None) -> None:
         print(func_to_run, real_args)
         func_to_run(*real_args)
     window = tk.Tk()
-    window.title("Welcome to TutorialsPoint")
+    window.title("Tweak Options For Graph")
     window.geometry('400x400')
     window.configure(background="grey")
 
