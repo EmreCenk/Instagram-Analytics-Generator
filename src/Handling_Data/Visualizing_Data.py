@@ -474,13 +474,13 @@ class InstagramDataVisualizer():
         fig, ax = plt.subplots()
         how_many = min(len(sorted), how_many_to_display)
         total_sent = [mapped[sorted[i]] for i in range(how_many)]
-        names = [utils.fix_username(sorted[i]) for i in range(how_many)]
+        names = [str(i+1) + ") "+ utils.fix_username(sorted[i]) for i in range(how_many)]
         ax.barh(names, total_sent)
         ax.invert_yaxis()
         plt.yticks([i for i in range(how_many)])
         plt.xlabel("Number of characters sent")
         plt.ylabel("Name of Chat")
-        plt.title(f"Chats Ranked by How Many Characters They Have Sent You\nNote: only displaying top {how_many} people. Tweak settings if you want to see more or less people graphed.")
+        plt.title(f"Chats Ranked by How Many Characters They Have Sent You\nNote: Currently displaying top {how_many} chats out of {len(sorted)} people. Tweak settings if you want to see more or less people graphed.")
         plt.show()
 if __name__ == '__main__':
     import os
