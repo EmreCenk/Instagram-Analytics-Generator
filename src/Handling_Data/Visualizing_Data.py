@@ -28,7 +28,7 @@ class InstagramDataVisualizer():
         plt.plot(xs, ys, label="login number")
         plt.xlabel("date (year-month)")
         plt.ylabel("number of logins")
-        plt.title(f"Number of logins over time'")
+        plt.title(f"Number of logins over time")
         plt.legend()
         plt.grid()
         plt.show()
@@ -241,7 +241,7 @@ class InstagramDataVisualizer():
 
         fig.canvas.mpl_connect('pick_event', on_pick)
 
-        plt.title(f"Followers Gained Over Time")
+        plt.title(f"Followers Gained Over Time\nNote: Please click on the data points to see a list of followers")
         plt.xlabel(UtilsForDataViz.get_x_axis_label(interval))
         plt.ylabel("follower number")
         plt.legend()
@@ -249,10 +249,10 @@ class InstagramDataVisualizer():
         plt.show()
 
     @staticmethod
-    def visualize_messages_sent_and_received_over_time(path: str,
-                                                               interval: int = 1,
-                                                               plot_sent: bool = True,
-                                                               plot_received: bool = True):
+    def visualize_total_messages_sent_and_received_over_time_counting_every_chat(path: str,
+                                                                                 interval: int = 1,
+                                                                                 plot_sent: bool = True,
+                                                                                 plot_received: bool = True):
         """
         The
         Visualizes the number of messages sent and received per day over time.
@@ -287,7 +287,7 @@ class InstagramDataVisualizer():
         plt.plot(sorted_sent, ysent, label=f"number of messages sent by {name_of_owner}")
         plt.plot(sorted_received, yreceived, label=f"number of messages received by {name_of_owner}")
 
-        plt.title(f"Number of Messages Received and Sent")
+        plt.title(f"Number of Messages Received and Sent in Total (counting every chat)")
         plt.xlabel(UtilsForDataViz.get_x_axis_label(interval))
         plt.ylabel("number of messages")
         plt.legend()
