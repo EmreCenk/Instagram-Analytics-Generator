@@ -113,8 +113,7 @@ class UtilsForDataViz():
         fig1, ax1 = plt.subplots(2, 2)
 
         location = ((0,0), (0,1), (1,0), (1,1))
-        name_of_owner = InstagramDataRetreiver.get_name(path)
-        data = data_func(path, name_of_owner)
+        data = data_func(path)
         for index in range(4):
             labels, sizes = [], []
             for d in sorted(data[index]):
