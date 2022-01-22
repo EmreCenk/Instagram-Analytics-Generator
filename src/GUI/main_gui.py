@@ -139,12 +139,163 @@ class GUI():
         self.all_widgets.append(self.path_label)
         self.widgets_with_text.append(self.path_label)
 
+    def generate_current_graph(self):
+        print("hi")
+    def place_generate_graph_button(self):
+        self.generate_graph = ttk.Button(
+            self.main_frame,
+            text="Click To Generate Graph",
+
+            command=self.generate_current_graph
+
+        )
+
+        #placing the button, and setting it's text scale:
+        self.generate_graph.place(relx = 0.5,rely = 0.7,relwidth=0.2, relheight=0.1, anchor="n")
+        self.generate_graph.scale=0.8
+
+    def clear_widgets_with_text_list(self, things_to_avoid=None):
+        if things_to_avoid is None:
+            things_to_avoid=[]
+
+        #deletes every widget inside the "widgets_with_text" list except the widgets that are in "things_to_avoid"
+        for k in self.widgets_with_text:
+            if k not in things_to_avoid:
+                k.destroy()
+
+        self.widgets_with_text=list(things_to_avoid)
+
+    def clear_all(self, things_to_avoid = None):
+        #deletes every widget on the screen except the widgets that are in "things_to_avoid"
+
+        if things_to_avoid is None:
+            things_to_avoid = []
+
+        self.clear_widgets_with_text_list(things_to_avoid)
+        for k in self.all_widgets:
+            if k not in things_to_avoid:
+                k.destroy()
+
+
+        self.all_widgets=list(things_to_avoid)
+
+    def proceed_to_search(self, force=False):
+
+        #This function displays the page that the user makes searches in
+
+        if len(self.folder_selected)<2: #Checking to see if a folder is selected
+            self.path_label.config(text="Please Select a Folder")
+            return None
+
+        if not force: #The variable force is a boolean value that states whether we should display the warning
+            # message or not
+            proceed=tk.messagebox.askyesno(message="The folder you have selected will always be the default folder from "
+                                                "now on. Are you sure you would like to proceed? This step is permanent. ")
+            if not proceed:
+                return None
+
+
+        self.clear_all() #clears page
+
+
+        #saves the default directory:
+        import os
+        print(os.getcwd())
+        folder = open("default.txt","w+")
+        folder.write(self.folder_selected)
+        folder.close()
+
+        #creates an instance of "excel_searcher": (The code for the excel_searcher class is in the folder titled
+        # "scraping_excel"
+
+
+        #Creating a prompt/text:
+        self.prompt = ttk.Label(self.main_frame,
+                               # bg=self.BACKGROUND_COLOR,
+                               text="Select which graph you would like to generate",
+                               # fg = self.FOREGROUND_COLOR,
+                               font=self.font,
+                               # bd=0, )
+                                )
+        self.prompt.place(relx=0.5, rely=0.15, relheight=0.2, relwidth=1, anchor="n")
+        self.prompt.configure(anchor="center")
+        self.place_method_options()
+        self.place_generate_graph_button()
+
+
+    def select_file(self):
+
+        #This function opens the file explorer
+
+        self.file_button.config(text="Opening File Browser...")
+        self.file_button.scale=0.8
+
+
+        #the following line opens the file explorer and saves the path of the folder selected:
+        self.folder_selected = filedialog.askdirectory()
+
+
+
+
+        self.file_button.config(text="Change Folder")
+
+        self.proceed_button = ttk.Button(
+            self.main_frame,
+            text="Click To Proceed",
+
+            command=self.proceed_to_search
+
+        )
+
+        #placing the button, and setting it's text scale:
+        self.proceed_button.place(relx = 0.5,rely = 0.7,relwidth=0.2, relheight=0.1, anchor="n")
+        self.proceed_button.scale=0.8
+
+        #placing the text that shows which path you selected:
+        self.place_path_label(self.folder_selected)
+
+        #adding widgets in the list:
+        self.widgets_with_text.append(self.proceed_button)
+        self.all_widgets.append(self.proceed_button)
+
+        #Resizing text to fit:
+        self.resize_all_text(fake_event(self.main_frame.winfo_height()))
+    def place_file_button(self):
+        #Places file selection button
+        self.file_button = ttk.Button(self.main_frame,  # Since this will be the child of the initial frame
+                            text="Select Folder",
+                            # bg=self.BUTTON_COLOR,  # background color
+
+                            # fg = self.FOREGROUND_COLOR,
+                            command=self.select_file)  # We don't want any borders
+
+
+
+
+        self.file_button.place(relx=0.5, rely=0.4, relwidth=0.4, relheight=0.1, anchor="n")
+        self.file_button.scale=1
+        self.widgets_with_text.append(self.file_button)
+        self.all_widgets.append(self.file_button)
 
     def start(self,start_mainloop = True):
-        #This function starts the gui
+        #We read the default.txt file:
+        folder = open("default.txt", "r")
+        default=folder.read()
+        folder.close()
 
-        self.place_method_options()
-        self.place_path_label("aasdf")
+        if default!="":
+            #If there is no default folder selected, we set up the select file button:
+            self.place_path_label(default)
+            self.folder_selected=default
+            self.proceed_to_search(True)
+
+        else:
+            #If there is a default folder selected, we skip directly to the search screen
+            self.place_file_button()
+        #This function starts the gui
+        # self.place_file_button()
+        # self.place_method_options()
+        # self.place_path_label("aasdf")
 
         if start_mainloop:
             #Officially starting UI:
