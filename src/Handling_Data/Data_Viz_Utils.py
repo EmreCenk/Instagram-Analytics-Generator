@@ -181,10 +181,11 @@ class UtilsForDataViz():
         xs, ys = [], []
         names = []
         fig, ax = plt.subplots()
-
+        prev_total = 0
         for date in categorized_by_date:
             xs.append(date)
-            ys.append(len(categorized_by_date[date]))
+            prev_total += len(categorized_by_date[date])
+            ys.append(prev_total)
             names.append("")
             for person in categorized_by_date[date]:
 

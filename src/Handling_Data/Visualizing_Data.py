@@ -193,7 +193,7 @@ class InstagramDataVisualizer():
             path,
             InstagramDataRetreiver.get_followers,
             interval,
-            "followers"
+            "follower"
         )
     @staticmethod
     def visualize_following_gain_over_time(path: str, interval: int = 1):
