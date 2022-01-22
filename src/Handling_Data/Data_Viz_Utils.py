@@ -203,9 +203,9 @@ class UtilsForDataViz():
             ind = event.ind
             how_many = ydata[ind]
             dates = xdata[ind]
-
             for i in range(len(how_many)):
-                current_follower_num = how_many[i]
+                if ind == 0: current_follower_num = ydata[ind]
+                else: current_follower_num = ydata[ind] - ydata[ind - 1]
                 current_followers = ""
 
                 for person in categorized_by_date[dates[i]]:

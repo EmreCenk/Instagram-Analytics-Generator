@@ -458,32 +458,7 @@ if __name__ == '__main__':
     plt.style.use('dark_background')
 
     path_to_data = os.environ["path_to_instagram_export_download"]
-    InstagramDataVisualizer.friendship_rankings_by_total_length_of_messages_they_sent_you(path_to_data)
-    # InstagramDataVisualizer.visualize_friendship_ranking_histogram_by_number_of_messages_sent(path_to_data)
-    # InstagramDataVisualizer.visualize_message_length_over_time_in_chat(path_to_data, "", interval = 4)
-    # InstagramDataVisualizer.visualize_messages_sent_and_received_over_time(path_to_data, "Emre Cenk")
-    #cache test:
-    # InstagramDataAnalyzer.count_msgs(path_to_data, 0, "Emre Cenk")
-    # InstagramDataAnalyzer.count_msgs(path_to_data, 1, "Emre Cenk")
-    # InstagramDataAnalyzer.count_msgs(path_to_data, 2, "Emre Cenk")
-    # InstagramDataAnalyzer.count_msgs(path_to_data, 3, "Emre Cenk")
-    #
-    # InstagramDataVisualizer.visualize_most_active_year(path_to_data, "Emre Cenk", bar_graph=True )
-    # InstagramDataVisualizer.visualize_most_active_month(path_to_data, "Emre Cenk", bar_graph=True )
-    # InstagramDataVisualizer.visualize_most_active_day(path_to_data, "Emre Cenk", bar_graph=True )
-    # InstagramDataVisualizer.visualize_most_active_hours(path_to_data, "Emre Cenk", bar_graph=True )
-
-    # print(InstagramDataAnalyzer.list_chats(path_to_data))
-    # InstagramDataVisualizer.visualize_logins(path_to_data)
-    # InstagramDataVisualizer.visualize_message_length_over_time(path_to_data, "thesimpsons_457uupaoka")
-    # InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data,
-    #                                                           interval = 2)
-    # InstagramDataVisualizer.visualize_messages_sent_and_received_over_time(path_to_data,
-    #                                                                                "Emre Cenk",
-    #                                                                                interval = 1,
-    #                                                                                )
-    # InstagramDataVisualizer.visualize_active_chats(path_to_data,
-    #                                                interval = 1)
-
-    # InstagramDataVisualizer.visualize_follower_gain_over_time(path_to_data,
-    #                                                interval = 0)
+    InstagramDataVisualizer.visualize_follower_gain_over_time(
+        path_to_data,
+        1
+    )
