@@ -467,18 +467,20 @@ class InstagramDataVisualizer():
         plt.show()
 
     @staticmethod
-    def friendship_rankings_by_total_length_of_messages_they_sent_you(path: str):
+    def friendship_rankings_by_total_length_of_messages_they_sent_you(path: str, how_many_to_display: int = 20):
         sorted, mapped = InstagramDataAnalyzer.friendship_rankings_by_messages_sent_to_user(path, 1)
         for i in range(10):
             print(sorted[i], mapped[sorted[i]])
         fig, ax = plt.subplots()
-        max = 10
-        total_sent = [mapped[sorted[i]] for i in range(max)]
-        names = [utils.fix_username(sorted[i]) for i in range(max)]
+        how_many = min(len(sorted), how_many_to_display)
+        total_sent = [mapped[sorted[i]] for i in range(how_many)]
+        names = [utils.fix_username(sorted[i]) for i in range(how_many)]
         ax.barh(names, total_sent)
         ax.invert_yaxis()
+        plt.yticks([i for i in range(how_many)])
         plt.xlabel("Number of characters sent")
         plt.ylabel("Name of Chat")
+        plt.title(f"Chats Ranked by How Many Characters They Have Sent You\nNote: only displaying top {how_many} people. Tweak settings if you want to see more or less people graphed.")
         plt.show()
 if __name__ == '__main__':
     import os
