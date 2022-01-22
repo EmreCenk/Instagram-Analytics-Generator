@@ -33,7 +33,9 @@ def run_func_via_gui(func_to_run: Callable, ready_inputs=None) -> None:
         real_args = []
         for i in range(len(args)):
             if types[i] == bool: real_args.append(args[i] == "True")
-            else: real_args.append(types[i](args[i]))
+            else:
+                try: real_args.append(types[i](args[i]))
+                except ValueError: warning["text"] = f"Please make sure {params[i]} is an integer.";warning.update(); return
         print(func_to_run, real_args)
         func_to_run(*real_args)
     window = tk.Tk()
@@ -74,7 +76,7 @@ def run_func_via_gui(func_to_run: Callable, ready_inputs=None) -> None:
     except: return
     tk.Button(window, text = "Generate Graph", command = execute).place(relx=0.5, rely=offset*(i+1), relwidth=0.4, relheight=offset, anchor="n")
     warning = tk.Label(window, text = "")
-    warning.place(relx=0.5, rely=offset * (i + 2), relwidth=0.4,
+    warning.place(relx=0.5, rely=offset * (i + 2), relwidth=1,
                                                              relheight=offset, anchor="n")
     window.mainloop()
 
