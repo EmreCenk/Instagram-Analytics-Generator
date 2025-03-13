@@ -64,6 +64,8 @@ class UtilsForDataViz():
             labels.append("other")
             sizes.append(100 - in_pie)
 
+        for i in range(len(sizes)):
+            print(f"{i}) {sizes[i]} -- {labels[i]}")
         fig1, ax1 = plt.subplots()
         ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
                 shadow=False)
