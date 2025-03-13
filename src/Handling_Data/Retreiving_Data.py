@@ -48,7 +48,7 @@ class InstagramDataRetreiver():
          'title': 'User Information'}
         """
         return InstagramDataRetreiver.get_json_for_certain_path(root_path,
-                                                                ["account_information"],
+                                                                ["personal_information", "personal_information"],
                                                                 "personal_information.json")["profile_user"][0]
     @staticmethod
     def get_name(root_path: str) -> str:
@@ -114,7 +114,7 @@ class InstagramDataRetreiver():
         :param root_path: path to export root
         :return: list of chat names
         """
-        return os.listdir(os.path.join(root_path, "messages", "inbox"))
+        return os.listdir(os.path.join(root_path, "your_instagram_activity", "messages", "inbox"))
     @staticmethod
     def get_messages(path: str, username: str) -> List[Dict]:
         """
@@ -130,7 +130,7 @@ class InstagramDataRetreiver():
 
         """
         username_folder = None
-        for folder_name in os.listdir(os.path.join(path, "messages", "inbox")):
+        for folder_name in InstagramDataRetreiver.list_chats(path):
 
             if len(folder_name) < len(username): continue
             if folder_name[:len(username)] == username:
@@ -142,7 +142,7 @@ class InstagramDataRetreiver():
                                     f"At the moment, there is no chat history with '{username}'")
 
         return InstagramDataRetreiver.get_json_for_certain_path(path,
-                                                               ["messages", "inbox", username_folder],
+                                                               ["your_instagram_activity", "messages", "inbox", username_folder],
                                                                "message_1.json"
                                                                )["messages"]
 
@@ -160,7 +160,10 @@ class InstagramDataRetreiver():
          'title': ''}
 
         """
-        return InstagramDataRetreiver.get_json_for_certain_path(path, ["followers_and_following"], "followers.json")["relationships_followers"]
+        try:
+            return InstagramDataRetreiver.get_json_for_certain_path(path, ["connections", "followers_and_following"], "followers.json")["relationships_followers"]
+        except:
+            return InstagramDataRetreiver.get_json_for_certain_path(path, ["connections", "followers_and_following"], "followers_1.json")
 
     @staticmethod
     def get_following(path: str):
@@ -176,7 +179,12 @@ class InstagramDataRetreiver():
          'title': ''}
 
         """
-        return InstagramDataRetreiver.get_json_for_certain_path(path, ["followers_and_following"], "following.json")["relationships_following"]
+        try:
+            return InstagramDataRetreiver.get_json_for_certain_path(path, ["followers_and_following"], "following.json")["relationships_following"]
+        except:
+            return InstagramDataRetreiver.get_json_for_certain_path(path, ["connections", "followers_and_following"], "following.json")["relationships_following"]
+
+
 if __name__ == '__main__':
     import os
     from pprint import pprint

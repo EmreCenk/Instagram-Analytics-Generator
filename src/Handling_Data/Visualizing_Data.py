@@ -332,7 +332,7 @@ class InstagramDataVisualizer():
 
         fig.canvas.mpl_connect('pick_event', on_pick)
 
-        plt.title(f"Number of Active Chats Over Time")
+        plt.title(f"Number of Active Chats Over Time\n(Datapoints are clickable)")
         plt.xlabel(UtilsForDataViz.get_x_axis_label(interval))
         plt.ylabel("number of active chats")
         plt.legend()
@@ -450,6 +450,15 @@ class InstagramDataVisualizer():
         plt.ylabel("Name of Chat")
         plt.title(f"Chats Ranked by How Many Characters They Have Sent You\nNote: Currently displaying top {how_many} chats out of {len(sorted)} people. Tweak settings if you want to see more or less people graphed.")
         plt.show()
+
+    @staticmethod
+    def show_traitors(path: str):
+        follower_names = [f["string_list_data"][0]["value"] for f in InstagramDataRetreiver.get_followers(path)]
+        following_names = [f["string_list_data"][0]["value"] for f in InstagramDataRetreiver.get_following(path)]
+        traitors = [f for f in following_names if f not in follower_names]
+        for i in range(len(traitors)): print(f"{i}) {traitors[i]}")            
+        
+
 if __name__ == '__main__':
     import os
     from dotenv import load_dotenv
