@@ -42,7 +42,7 @@ class GUI():
         self.root = tk.Tk()  # Initializes root (root is basically a tkinter class that stores a bunch of functions
         # and variables
 
-        self.root.title("Inventory Tracking")  # setting window title name
+        self.root.title("IG Stats")  # setting window title name
 
 
         #Here we set the theme to "vista". This is the closest replica of a windows theme that ttk has.

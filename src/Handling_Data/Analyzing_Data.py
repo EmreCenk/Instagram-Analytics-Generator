@@ -1,6 +1,6 @@
 import datetime
 import os
-from typing import List, Dict
+from typing import *
 from src.Handling_Data.Retreiving_Data import InstagramDataRetreiver
 from dateutil import parser
 from src.Handling_Data import utils
@@ -83,7 +83,7 @@ class InstagramDataAnalyzer():
         return counting
 
     @staticmethod
-    def count_number_of_messages_per_day(path: str, interval: int = 2) -> (Dict[datetime.date, str], Dict[datetime.date, str]):
+    def count_number_of_messages_per_day(path: str, interval: int = 2) -> Tuple[Dict[datetime.date, str], Dict[datetime.date, str]]:
         """
         counts number of active chats per day
         :param path: path to root folder
@@ -145,7 +145,7 @@ class InstagramDataAnalyzer():
     @staticmethod
     def count_msgs(path: str,
                    time_specification: int = 2,
-                   ) -> (Dict[int, int], Dict[int, int], (Dict[int, int], Dict[int, int])):
+                   ) -> Tuple[Dict[int, int], Dict[int, int], Tuple[Dict[int, int], Dict[int, int]]]:
 
         """
         Note: this function should not be directly called unless absolutely necessary. If you're trying to find a statistic, chances are there is a wrapper function for it.
@@ -209,14 +209,14 @@ class InstagramDataAnalyzer():
         return sent_lengths, number_of_sent_messages, received_lengths, number_of_received_messages
 
     @staticmethod
-    def most_active_years(path: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
+    def most_active_years(path: str) -> Tuple[Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]]:
         """
         Everything is the same as InstagramDataAnalyzer.most_active_day_of_week except this function checks most active years
         """
         return InstagramDataAnalyzer.count_msgs(path, 0)
 
     @staticmethod
-    def most_active_months(path: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
+    def most_active_months(path: str) -> Tuple[Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]]:
         """
         Everything is the same as InstagramDataAnalyzer.most_active_day_of_week except this function checks most active months of the year
         """
@@ -224,7 +224,7 @@ class InstagramDataAnalyzer():
 
 
     @staticmethod
-    def most_active_days_of_week(path: str,) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
+    def most_active_days_of_week(path: str,) -> Tuple[Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]]:
         """
         :param path: path to root
         :return: 4 dicts that maps days to integers
@@ -244,7 +244,7 @@ class InstagramDataAnalyzer():
 
 
     @staticmethod
-    def most_active_hours(path: str) -> (Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]):
+    def most_active_hours(path: str) -> Tuple[Dict[int, int], Dict[int, int], Dict[int, int], Dict[int, int]]:
         """
         Everything is the same as InstagramDataAnalyzer.most_active_day_of_week except this function checks most active hours of the day
         """
@@ -255,7 +255,7 @@ class InstagramDataAnalyzer():
     @staticmethod
     def friendship_rankings_by_messages_sent_to_user(path: str,
                                                      method: int = 0,
-                                                     ) -> (List, Dict[str, int]):
+                                                     ) -> Tuple[List, Dict[str, int]]:
         """
         Ranks people by looking at messages they sent to user
         :param path: path to root
