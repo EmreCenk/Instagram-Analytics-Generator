@@ -73,7 +73,7 @@ class UtilsForDataViz():
         plt.title(title)
         plt.xlabel(x_axis_title)
         plt.ylabel(y_axis_title)
-        plt.show()
+        plt.show(block=False)
 
     @staticmethod
     def visualize_message_activity_in_cycle(path: str,
@@ -143,7 +143,7 @@ class UtilsForDataViz():
             ax1[location[index][0],location[index][1]].set_title(titles[index])
             ax1[location[index][0],location[index][1]].set_xlabel(xlabels[index])
             ax1[location[index][0],location[index][1]].set_ylabel(ylabels[index])
-        plt.show()
+        plt.show(block=False)
 
     @staticmethod
     def visualize_gains(path: str,
@@ -230,7 +230,7 @@ class UtilsForDataViz():
         plt.ylabel(f"Number of {what_gained}")
         plt.legend()
         plt.grid()
-        plt.show()
+        plt.show(block=False)
 
 
 

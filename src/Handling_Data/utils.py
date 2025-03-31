@@ -20,13 +20,7 @@ def get_time_string(interval: int = 3) -> str:
                          f"\nThe interval meanings are as follows:"
                          "\n0 -> yearly intervals\n1 -> monthly intervals\n2 -> daily intervals\n3 -> hourly interval\n4 -> Minute intervals (may misrepresent data since a long message will create extreme spikes)"
                          f"\n\n{interval} is not a valid interval")
-    times = ["%Y", "%m", "%d", "%H"]
-    time_string = ""
-    for i in range(min(len(times), interval + 1)): time_string += times[i] + "-"
-    time_string = time_string[:-1]
-    if interval == 4: time_string += ":%M"
-    return time_string
-
+    return "".join(["%Y", "-%m", r"-%d", "-%H", ":%M"][:interval+1]) 
 
 def loop_through_every_message(path: str) -> (Dict, str):
     """

@@ -7,6 +7,7 @@ from dateutil import parser
 from src.Handling_Data.Retreiving_Data import InstagramDataRetreiver
 from src.Handling_Data import utils
 from src.Handling_Data.Data_Viz_Utils import UtilsForDataViz
+from typing import *
 
 class InstagramDataVisualizer():
 
@@ -31,7 +32,7 @@ class InstagramDataVisualizer():
         plt.title(f"Number of logins over time")
         plt.legend()
         plt.grid()
-        plt.show()
+        plt.show(block=False)
 
     @staticmethod
     def visualize_message_length_over_time_in_chat(path: str,
@@ -78,7 +79,7 @@ class InstagramDataVisualizer():
         plt.ylabel("length of message")
         plt.legend()
         plt.grid()
-        plt.show()
+        plt.show(block=False)
 
     @staticmethod
     def visualize_message_count_over_time(path: str, chat_name: str, interval: int) -> None:
@@ -130,7 +131,7 @@ class InstagramDataVisualizer():
         plt.ylabel("number of messages")
         plt.legend()
         plt.grid()
-        plt.show()
+        plt.show(block=False)
 
 
     @staticmethod
@@ -260,7 +261,7 @@ class InstagramDataVisualizer():
         plt.ylabel("number of messages")
         plt.legend()
         plt.grid()
-        plt.show()
+        plt.show(block=False)
 
     @staticmethod
     def visualize_active_chats(path: str,
@@ -332,12 +333,12 @@ class InstagramDataVisualizer():
 
         fig.canvas.mpl_connect('pick_event', on_pick)
 
-        plt.title(f"Number of Active Chats Over Time\n(Datapoints are clickable)")
+        plt.title(f"Number of Active Chats Over Time")
         plt.xlabel(UtilsForDataViz.get_x_axis_label(interval))
         plt.ylabel("number of active chats")
         plt.legend()
         plt.grid()
-        plt.show()
+        plt.show(block=False)
 
 
     @staticmethod
@@ -432,13 +433,21 @@ class InstagramDataVisualizer():
         plt.title("Distribution of how many messages were received for each chat")
         plt.ylabel("Number of chats")
         plt.xlabel("How many messages were sent to user")
-        plt.show()
+        plt.show(block=False)
 
     @staticmethod
-    def friendship_rankings_by_total_length_of_messages_they_sent_you(path: str, how_many_to_display: int = 20):
-        sorted, mapped = InstagramDataAnalyzer.friendship_rankings_by_messages_sent_to_user(path, 1)
-        for i in range(10):
-            print(sorted[i], mapped[sorted[i]])
+    def friendship_rankings_by_total_length_of_messages_sent(path: str,
+                                                             ranking_mode: Literal["Only Use Number of Messages *YOU SENT THEM*", 
+                                                                                   "Only Use Number of Messages *YOU RECEIVED FROM THEM*",
+                                                                                   "USE BOTH"],
+                                                             how_many_to_display: int = 20,
+                                                             ignore_groupchats: bool = False):
+        mode = ["Only Use Number of Messages *YOU SENT THEM*", 
+                "Only Use Number of Messages *YOU RECEIVED FROM THEM*",
+                "USE BOTH"].index(ranking_mode)
+        sorted, mapped = InstagramDataAnalyzer.friendship_rankings_by_messages_sent_to_user(path, 1, mode, ignore_groupchats)
+        # for i in range(10):
+        #     print(sorted[i], mapped[sorted[i]])
         fig, ax = plt.subplots()
         how_many = min(len(sorted), how_many_to_display)
         total_sent = [mapped[sorted[i]] for i in range(how_many)]
@@ -448,17 +457,15 @@ class InstagramDataVisualizer():
         plt.yticks([i for i in range(how_many)])
         plt.xlabel("Number of characters sent")
         plt.ylabel("Name of Chat")
-        plt.title(f"Chats Ranked by How Many Characters They Have Sent You\nNote: Currently displaying top {how_many} chats out of {len(sorted)} people. Tweak settings if you want to see more or less people graphed.")
-        plt.show()
+        if "YOU SENT THEM" in ranking_mode:
+            plt.title(f"Chats Ranked by How Many Characters *You have Sent Them*\nNote: Currently displaying top {how_many} chats out of {len(sorted)} people. Tweak settings if you want to see more or less people graphed.")
+        elif "YOU RECEIVED FROM THEM" in ranking_mode:
+            plt.title(f"Chats Ranked by How Many Characters *They Have Sent You*\nNote: Currently displaying top {how_many} chats out of {len(sorted)} people. Tweak settings if you want to see more or less people graphed.")
+        else:
+            plt.title(f"Chats Ranked by How Many Characters *that have been exchanged*\nNote: Currently displaying top {how_many} chats out of {len(sorted)} people. Tweak settings if you want to see more or less people graphed.")
 
-    @staticmethod
-    def show_traitors(path: str):
-        follower_names = [f["string_list_data"][0]["value"] for f in InstagramDataRetreiver.get_followers(path)]
-        following_names = [f["string_list_data"][0]["value"] for f in InstagramDataRetreiver.get_following(path)]
-        traitors = [f for f in following_names if f not in follower_names]
-        for i in range(len(traitors)): print(f"{i}) {traitors[i]}")            
+        plt.show(block=False)
         
-
 if __name__ == '__main__':
     import os
     from dotenv import load_dotenv
