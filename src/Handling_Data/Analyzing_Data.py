@@ -255,25 +255,48 @@ class InstagramDataAnalyzer():
     @staticmethod
     def friendship_rankings_by_messages_sent_to_user(path: str,
                                                      method: int = 0,
+                                                     which_messages: int = 0,
+                                                     ignore_groupchats: bool = False
                                                      ) -> Tuple[List, Dict[str, int]]:
         """
         Ranks people by looking at messages they sent to user
         :param path: path to root
         :param method: which method to rank people by.
-        0 -> rank by number of messages sent
-        1 -> rank by length of messages sent
+            0 -> rank by number of messages sent
+            1 -> rank by length of messages sent
+        :param which_messages: Which kind of messages to count:
+            0 -> count only messages user sent to the other person
+            1 -> only messages received by the user
+            2 -> count both
+        :param ignore_groupchats: Whether to remove groupchats from the final rankings
         :return: (List_of_people_in_descending_order, Dictionary_that_maps_usernames_to_points_gathered)
         Note: "points gathered" depends on which method is used. for method 0, "points gathered" will refer to how many messages, for method 1, "points gathered" will refer to total characters.
         """
         if not(method in {0, 1}): raise ValueError(f"method value must be either 0 or 1. Here are the meanings:\n0 -> rank by number of messages sent\n1 -> rank by length of messages sent\n{method} is not a valid method value")
+        if not(which_messages in {0, 1, 2}): raise ValueError(f"which_messages value must be either 0, 1, 2. Here are the meanings:\n0 -> rank by number of messages sent\n1 -> rank by length of messages sent\n{method} is not a valid method value")
         name_of_owner = InstagramDataRetreiver.get_name(path)
         chats_that_sent_user_messages = defaultdict(utils.zero)
+        members_of_chat = defaultdict(set)
         for message, convo_name in utils.loop_through_every_message(path):
-            if message["sender_name"] == name_of_owner: continue
+            members_of_chat[convo_name].add(message["sender_name"])
+            # if ((message["sender_name"] == name_of_owner) != only_use_messages_sent_by_you): continue
+            if (which_messages == 0) and (message["sender_name"] != name_of_owner): continue
+            if (which_messages == 1) and (message["sender_name"] == name_of_owner): continue
+
             if method == 0: chats_that_sent_user_messages[convo_name] += 1
             elif method == 1:
                 if "content" not in message: continue
                 chats_that_sent_user_messages[convo_name] += len(message["content"])
+        # from pprint import pprint
+        # pprint(members_of_chat)
+        if ignore_groupchats:
+            to_remove = [] # shouldn't delete keys while looping over the dict
+            for convo_name in chats_that_sent_user_messages:
+                # nvm I was def wrong about the following thing lmao
+                # if len(members_of_chat[convo_name]) <= 4: continue # on purpose. In my opinion groupchats with less than 5 are intimate enough to display (my program, my definition of "groupchat" lol)
+                if len(members_of_chat[convo_name]) <= 2: continue # back to standard definition we are (it turns out even with 4 people some gc's get very convoluted)
+                to_remove.append(convo_name)
+            for k in to_remove: del chats_that_sent_user_messages[k]
 
         sorted_people = sorted(chats_that_sent_user_messages, key = lambda x: chats_that_sent_user_messages[x], reverse = True)
         return sorted_people, chats_that_sent_user_messages
