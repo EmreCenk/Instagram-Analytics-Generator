@@ -280,8 +280,8 @@ class InstagramDataAnalyzer():
         for message, convo_name in utils.loop_through_every_message(path):
             members_of_chat[convo_name].add(message["sender_name"])
             # if ((message["sender_name"] == name_of_owner) != only_use_messages_sent_by_you): continue
-            if (which_messages == 0) and (message["sender_name"] != name_of_owner): continue
-            if (which_messages == 1) and (message["sender_name"] == name_of_owner): continue
+            if (which_messages == 0) and (message["sender_name"] != name_of_owner): continue # look at only sent by other people
+            if (which_messages == 1) and (message["sender_name"] == name_of_owner): continue # look at only user sent
 
             if method == 0: chats_that_sent_user_messages[convo_name] += 1
             elif method == 1:
