@@ -98,7 +98,6 @@ class InstagramDataVisualizer():
         :return: None
         """
 
-        #todo: implement time strings to customize plot intervals on x axis
         colors = ['red', 'blue', 'darkkhaki', 'green', 'orange', 'purple', 'brown', 'pink', 'teal', 'maroon', 'cyan', 'magenta', 'navy', 'lime', 'olive', 'lavender', 'mauve', 'umber', 'murk', 'black', 'gray']
 
         time_string = UtilsForDataViz.get_time_string(interval)
@@ -271,7 +270,6 @@ class InstagramDataVisualizer():
         """
         Visualizes the number of active chats over time
         Very similar structure to InstagramDataVisualizer.visualize_follower_gain_over_time
-        todo: check if it's worth generalizing/refactoring InstagramDataVisualizer.visualize_follower_gain_over_time and InstagramDataVisualizer.visualize_active_chats into a single function.
 
         :param path: path to root
         :param interval: an integer between 0 and 3 inclusive that specifies what interval the messages will be plotted in.

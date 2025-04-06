@@ -3,6 +3,10 @@ from typing import Dict
 import inspect
 import types
 from typing import List, Callable
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
+
+
 def get_time_string(interval: int = 3) -> str:
     """
     Gets a time string in the format of "%Y-%m-%d ..."
@@ -22,6 +26,19 @@ def get_time_string(interval: int = 3) -> str:
                          f"\n\n{interval} is not a valid interval")
     return "".join(["%Y", "-%m", r"-%d", "-%H", ":%M"][:interval+1]) 
 
+def get_timedelta_from_time_string(fmt: str) -> timedelta:
+    """
+    Gets a time delta. "fmt" string should be the output of "get_time_string".
+    """
+    if r"%d" in fmt:
+        return timedelta(days=1)
+    elif "%m" in fmt:
+        return relativedelta(months=1)
+    elif "%Y" in fmt:
+        return relativedelta(years=1)
+    else:
+        raise ValueError("Unsupported format granularity")
+    
 def loop_through_every_message(path: str) -> (Dict, str):
     """
     Loops and yields every message that the user has sent and/or received
