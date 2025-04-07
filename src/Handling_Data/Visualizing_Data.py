@@ -6,8 +6,9 @@ from datetime import datetime
 from dateutil import parser
 from src.Handling_Data.Retreiving_Data import InstagramDataRetreiver
 from src.Handling_Data import utils
-from src.Handling_Data.Data_Viz_Utils import UtilsForDataViz
+from src.Handling_Data.Data_Viz_Utils import UtilsForDataViz, BarGraphVisualizer
 from typing import *
+from collections import defaultdict
 
 class InstagramDataVisualizer():
 
@@ -464,6 +465,77 @@ class InstagramDataVisualizer():
 
         plt.show(block=False)
         
+    @staticmethod
+    def friendship_race(path: str,
+                        interval: int,
+                        ranking_mode: Literal["Only Use Number of Messages *YOU SENT THEM*", 
+                                            "Only Use Number of Messages *YOU RECEIVED FROM THEM*",
+                                            "USE BOTH"],
+                        ignore_groupchats: bool = False,
+                        how_many_to_display: int = 20,
+                        ):
+        mode = ["Only Use Number of Messages *YOU SENT THEM*", 
+                "Only Use Number of Messages *YOU RECEIVED FROM THEM*",
+                "USE BOTH"].index(ranking_mode)
+        which_messages = mode
+        
+        ignore_groupchats = True
+        time_string = UtilsForDataViz.get_time_string(interval)
+        chats = InstagramDataRetreiver.list_chats(path)
+        date_to_msg = defaultdict(list)
+        earliest_msg = datetime.max
+        latest_msg = datetime.min
+        members_of_chat = defaultdict(set)
+        name_of_owner = InstagramDataRetreiver.get_name(path)
+        # for message, convo_name in utils.loop_through_every_message(path):
+        for convo_name in chats:
+            for message in InstagramDataRetreiver.get_messages(path, convo_name):
+                if (which_messages == 0) and (message["sender_name"] != name_of_owner): continue # look at only sent by other people
+                if (which_messages == 1) and (message["sender_name"] == name_of_owner): continue # look at only user sent
+
+                members_of_chat[convo_name].add(message["sender_name"])
+                message_date = datetime.fromtimestamp(message["timestamp_ms"] / 1000)
+                message_date_str = message_date.strftime(time_string)
+                date_to_msg[message_date_str].append((convo_name, message))
+                earliest_msg = min(earliest_msg, message_date)
+                latest_msg = max(latest_msg, message_date)
+
+        blacklist = []
+        if ignore_groupchats:
+            for convo_name in chats:
+                if len(members_of_chat[convo_name]) <= 2: continue # back to standard definition we are (it turns out even with 4 people some gc's get very convoluted)
+                blacklist.append(convo_name)
+        
+        data_points = []
+        delta_time = utils.get_timedelta_from_time_string(time_string)
+        current_date = earliest_msg
+        dates = []
+        while current_date < latest_msg:
+            dates.append(current_date)        
+            current_date += delta_time
+
+        situation_current = [0 for i in range(len(chats))]
+        get_username_index = {chats[i]: i for i in range(len(chats))}
+        data_points = []
+        for i in range(len(dates)):
+            d = dates[i]
+            cache = d.strftime(time_string)
+            for convo_name, message in date_to_msg[cache]:
+                if convo_name in blacklist: continue
+                if "content" not in message: continue
+                situation_current[get_username_index[convo_name]] += len(message["content"])  
+
+            data_points.append([k for k in situation_current])
+        visualizer = BarGraphVisualizer(data_points, dates, [utils.fix_username(c) for c in chats],
+                                        format_date_func = lambda d: d.strftime(time_string))
+        visualizer.setup_plot()  # Set up the initial plot
+        visualizer.setup_slider()  # Set up the slider for time control
+        visualizer.setup_play_button()  # Set up the play button to start/stop animation
+        visualizer.create_animation()  # Create the animation object
+
+        # Show the plot with the interactive elements
+        visualizer.show()
+            
 if __name__ == '__main__':
     import os
     from dotenv import load_dotenv
