@@ -1,8 +1,7 @@
 from typing import *
 from src.Handling_Data import utils
 from time import time
-from datetime import datetime, timedelta
-from src.Handling_Data.Data_Viz_Utils import UtilsForDataViz
+from src.Handling_Data.Data_Viz_Utils import UtilsForDataViz, BarGraphVisualizer, DataGenerator
 from src.Handling_Data.Retreiving_Data import InstagramDataRetreiver
 from collections import defaultdict
 
@@ -15,8 +14,20 @@ if __name__ == '__main__':
     # main()
     # exit()
 
+    num_time_steps = 100
+    num_categories = 10
+    data_generator = DataGenerator(num_categories, num_time_steps)
 
-    
+    # Create a Visualizer and set it up
+    visualizer = BarGraphVisualizer(data_generator.fluctuating_data, [0 for i in range(num_time_steps)], data_generator.category_names)
+    visualizer.setup_plot()  # Set up the initial plot
+    visualizer.setup_slider()  # Set up the slider for time control
+    visualizer.setup_play_button()  # Set up the play button to start/stop animation
+    visualizer.create_animation()  # Create the animation object
+
+    # Show the plot with the interactive elements
+    visualizer.show()
+
     interval = 2
     start_time = time()
     everything = []

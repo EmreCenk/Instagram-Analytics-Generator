@@ -1,0 +1,5 @@
+{
+
+    "code-runner.customCommand": "./run.sh",
+    "code-runner.runInTerminal": true,
+}

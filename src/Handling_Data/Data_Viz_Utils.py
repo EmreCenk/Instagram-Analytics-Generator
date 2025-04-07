@@ -253,7 +253,8 @@ class DataGenerator:
 
         self.fluctuating_data = np.zeros((num_time_steps, num_categories))  # Data container
         self.category_names = [f'Category {i}' for i in range(1, num_categories + 1)]  # Default names
-
+        self.num_time_steps = num_time_steps
+        self.num_categories = num_categories
         data = np.linspace(0, 1, self.num_time_steps)  # Linear base for all categories
         for i in range(self.num_categories):
             growth_rate = np.random.uniform(0.01, 0.05)  # Random growth rates for each category
@@ -402,8 +403,10 @@ class BarGraphVisualizer:
 
     def animate(self, i):
         if self.is_playing:
-            self.slider.set_val(i)  # Update slider value based on the current frame
-            self.update(i)  # Update the plot for the current frame
+            self.slider.set_val(self.slider.val)  # Update slider value based on the current frame
+            self.update(self.slider.val)  # Update the plot for the current frame
+            self.slider.val = min(len(self.data)-1, self.slider.val+1)
+
 
     def create_animation(self):
         self.ani = FuncAnimation(self.fig, self.animate, frames=range(self.num_time_steps), 
@@ -415,22 +418,6 @@ class BarGraphVisualizer:
 
 
 
-
-if __name__ == "__main__":
-
-    num_categories = 10
-    num_time_steps = 100
-    data_generator = DataGenerator(num_categories, num_time_steps)
-
-    # Create a Visualizer and set it up
-    visualizer = BarGraphVisualizer(data_generator)
-    visualizer.setup_plot()  # Set up the initial plot
-    visualizer.setup_slider()  # Set up the slider for time control
-    visualizer.setup_play_button()  # Set up the play button to start/stop animation
-    visualizer.create_animation()  # Create the animation object
-
-    # Show the plot with the interactive elements
-    visualizer.show()
 
 
 
